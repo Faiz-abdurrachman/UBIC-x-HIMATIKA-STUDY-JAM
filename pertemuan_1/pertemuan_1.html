@@ -1,885 +1,1914 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UBIC: Zero to Web3 Hero</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        /* --- UBIC BRAND & THEME --- */
-        :root {
-            --unu-green: #006A4E;
-            --unu-gold: #F59E0B;
-            --tech-black: #111827;
-            --bg-color: #FAFAFA;
-            --grid-color: #E5E5E5;
-        }
+      /* --- UBIC BRAND & THEME --- */
+      :root {
+        --unu-green: #006a4e;
+        --unu-gold: #f59e0b;
+        --tech-black: #111827;
+        --bg-color: #fafafa;
+        --grid-color: #e5e5e5;
+      }
 
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--tech-black);
-            overflow: hidden;
-        }
+      body {
+        font-family: "Space Grotesk", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--tech-black);
+        overflow: hidden;
+      }
 
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
 
-        /* --- VISUAL NOISE & GRID --- */
-        .bg-indie {
-            background-image: radial-gradient(var(--grid-color) 1.5px, transparent 1.5px);
-            background-size: 24px 24px;
-            position: absolute; inset: 0; z-index: -1;
-        }
-        
-        .bg-noise {
-            position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.04;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
+      /* --- VISUAL NOISE & GRID --- */
+      .bg-indie {
+        background-image: radial-gradient(
+          var(--grid-color) 1.5px,
+          transparent 1.5px
+        );
+        background-size: 24px 24px;
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+      }
 
-        /* --- SLIDE ENGINE --- */
-        main {
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-        }
+      .bg-noise {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      }
 
+      /* --- SLIDE ENGINE --- */
+      main {
+        height: 100vh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+      }
+
+      section {
+        min-height: 100vh;
+        height: auto;
+        width: 100%;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+        position: relative;
+        background: transparent;
+        overflow: hidden;
+      }
+
+      @media (min-width: 640px) {
         section {
-            height: 100vh;
-            width: 100%;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            position: relative;
-            background: transparent;
-            overflow: hidden;
+          height: 100vh;
+          padding: 2rem;
         }
+      }
 
-        /* --- ANIMATION ENGINE --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      /* --- ANIMATION ENGINE --- */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      section.active .reveal {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      section.active .reveal:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      section.active .reveal:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      section.active .reveal:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      section.active .reveal:nth-child(4) {
+        transition-delay: 0.4s;
+      }
+      section.active .reveal:nth-child(5) {
+        transition-delay: 0.5s;
+      }
+
+      /* --- COMPONENTS --- */
+      .indie-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-bottom: 3px solid #d1d5db;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: transform 0.1s;
+      }
+      .indie-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--unu-green);
+        border-bottom-color: var(--unu-green);
+      }
+
+      .indie-btn {
+        background: white;
+        color: var(--tech-black);
+        border: 2px solid var(--tech-black);
+        padding: 0.75rem 2rem;
+        font-weight: bold;
+        box-shadow: 4px 4px 0px 0px var(--unu-green);
+        transition: all 0.1s;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+      .indie-btn:hover {
+        transform: translate(-1px, -1px);
+        box-shadow: 6px 6px 0px 0px var(--unu-green);
+      }
+      .indie-btn:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0px 0px 0px 0px var(--unu-green);
+      }
+
+      .highlight {
+        background: linear-gradient(
+          120deg,
+          rgba(245, 158, 11, 0.2) 0%,
+          rgba(245, 158, 11, 0.2) 100%
+        );
+        background-repeat: no-repeat;
+        background-size: 100% 40%;
+        background-position: 0 88%;
+      }
+
+      /* SVG ICONS (Clean, Technical Look) */
+      .icon {
+        stroke-width: 1.5;
+        stroke: currentColor;
+        fill: none;
+      }
+      .icon-lg {
+        width: 48px;
+        height: 48px;
+      }
+      .icon-md {
+        width: 36px;
+        height: 36px;
+      }
+      .icon-sm {
+        width: 20px;
+        height: 20px;
+      }
+
+      @media (min-width: 640px) {
+        .icon-lg {
+          width: 64px;
+          height: 64px;
         }
-        
-        section.active .reveal { opacity: 1; transform: translateY(0); }
-        section.active .reveal:nth-child(1) { transition-delay: 0.1s; }
-        section.active .reveal:nth-child(2) { transition-delay: 0.2s; }
-        section.active .reveal:nth-child(3) { transition-delay: 0.3s; }
-        section.active .reveal:nth-child(4) { transition-delay: 0.4s; }
-        section.active .reveal:nth-child(5) { transition-delay: 0.5s; }
+        .icon-md {
+          width: 48px;
+          height: 48px;
+        }
+        .icon-sm {
+          width: 24px;
+          height: 24px;
+        }
+      }
 
-        /* --- COMPONENTS --- */
+      main::-webkit-scrollbar {
+        width: 0;
+      }
+
+      /* Interactive States */
+      .node-active {
+        background-color: #ecfdf5 !important;
+        border-color: var(--unu-green) !important;
+        transform: scale(1.02);
+        transition: all 0.2s;
+      }
+      .drop-anim {
+        animation: dropItem 0.6s forwards;
+      }
+      @keyframes dropItem {
+        0% {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        60% {
+          transform: translateY(10px);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 640px) {
+        body {
+          font-size: 14px;
+        }
+        h1,
+        h2,
+        h3 {
+          word-wrap: break-word;
+        }
+        .text-9xl {
+          font-size: 3rem !important;
+          line-height: 1.1 !important;
+        }
+        .text-8xl {
+          font-size: 2.5rem !important;
+          line-height: 1.1 !important;
+        }
+        .text-7xl {
+          font-size: 2rem !important;
+          line-height: 1.2 !important;
+        }
+        .text-6xl {
+          font-size: 1.75rem !important;
+          line-height: 1.2 !important;
+        }
+        .text-5xl {
+          font-size: 1.5rem !important;
+          line-height: 1.3 !important;
+        }
+        .text-4xl {
+          font-size: 1.25rem !important;
+          line-height: 1.3 !important;
+        }
+        .text-3xl {
+          font-size: 1.125rem !important;
+        }
+        .text-2xl {
+          font-size: 1rem !important;
+        }
+        .text-xl {
+          font-size: 0.9rem !important;
+        }
         .indie-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-bottom: 3px solid #d1d5db;
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: transform 0.1s;
+          padding: 1rem !important;
         }
-        .indie-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--unu-green);
-            border-bottom-color: var(--unu-green);
+        .grid {
+          gap: 0.75rem !important;
         }
+        .gap-16 {
+          gap: 1rem !important;
+        }
+        .gap-12 {
+          gap: 0.75rem !important;
+        }
+        .gap-8 {
+          gap: 0.5rem !important;
+        }
+        .mb-12,
+        .mb-10,
+        .mb-8 {
+          margin-bottom: 1rem !important;
+        }
+        .mb-6 {
+          margin-bottom: 0.75rem !important;
+        }
+        .mb-4 {
+          margin-bottom: 0.5rem !important;
+        }
+        .p-10 {
+          padding: 1rem !important;
+        }
+        .p-8 {
+          padding: 0.75rem !important;
+        }
+        .p-6 {
+          padding: 0.5rem !important;
+        }
+        .px-8 {
+          padding-left: 0.5rem !important;
+          padding-right: 0.5rem !important;
+        }
+        .py-4 {
+          padding-top: 0.5rem !important;
+          padding-bottom: 0.5rem !important;
+        }
+        .max-w-6xl,
+        .max-w-5xl,
+        .max-w-4xl,
+        .max-w-3xl,
+        .max-w-2xl {
+          max-width: 100% !important;
+        }
+        .w-64,
+        .w-48,
+        .w-32 {
+          width: auto !important;
+          max-width: 100% !important;
+        }
+        .h-64,
+        .h-48,
+        .h-40 {
+          height: auto !important;
+          min-height: 200px !important;
+        }
+        .flex-row {
+          flex-direction: column !important;
+        }
+        .grid-cols-3 {
+          grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+        }
+        .grid-cols-2 {
+          grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+        }
+        .grid-cols-4 {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+      }
 
-        .indie-btn {
-            background: white;
-            color: var(--tech-black);
-            border: 2px solid var(--tech-black);
-            padding: 0.75rem 2rem;
-            font-weight: bold;
-            box-shadow: 4px 4px 0px 0px var(--unu-green);
-            transition: all 0.1s;
-            cursor: pointer;
-            border-radius: 8px;
+      @media (min-width: 641px) and (max-width: 1024px) {
+        .text-9xl {
+          font-size: 5rem !important;
         }
-        .indie-btn:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 6px 6px 0px 0px var(--unu-green);
+        .text-8xl {
+          font-size: 4rem !important;
         }
-        .indie-btn:active {
-            transform: translate(4px, 4px);
-            box-shadow: 0px 0px 0px 0px var(--unu-green);
+        .text-7xl {
+          font-size: 3.5rem !important;
         }
+        .text-6xl {
+          font-size: 3rem !important;
+        }
+        .text-5xl {
+          font-size: 2.5rem !important;
+        }
+        .grid-cols-4 {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+      }
 
-        .highlight {
-            background: linear-gradient(120deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
-            background-repeat: no-repeat;
-            background-size: 100% 40%;
-            background-position: 0 88%;
+      /* Animation for Flying Coin (Now SVG) */
+      @keyframes flyToBook {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
         }
-
-        /* SVG ICONS (Clean, Technical Look) */
-        .icon { stroke-width: 1.5; stroke: currentColor; fill: none; }
-        .icon-lg { width: 64px; height: 64px; }
-        .icon-md { width: 48px; height: 48px; }
-        .icon-sm { width: 24px; height: 24px; }
-        
-        main::-webkit-scrollbar { width: 0; }
-        
-        /* Interactive States */
-        .node-active { background-color: #ecfdf5 !important; border-color: var(--unu-green) !important; transform: scale(1.02); transition: all 0.2s; }
-        .drop-anim { animation: dropItem 0.6s forwards; }
-        @keyframes dropItem { 0% { transform: translateY(-50px); opacity: 0; } 60% { transform: translateY(10px); opacity: 1; } 100% { transform: translateY(0); opacity: 1; } }
-
-        /* Animation for Flying Coin (Now SVG) */
-        @keyframes flyToBook {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            50% { transform: translate(var(--tx), var(--ty)) scale(1.5); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        50% {
+          transform: translate(var(--tx), var(--ty)) scale(1.5);
+          opacity: 1;
         }
-        .flying-coin {
-            position: absolute;
-            z-index: 50;
-            pointer-events: none;
-            color: var(--unu-gold);
+        100% {
+          transform: translate(var(--tx), var(--ty)) scale(0);
+          opacity: 0;
         }
+      }
+      .flying-coin {
+        position: absolute;
+        z-index: 50;
+        pointer-events: none;
+        color: var(--unu-gold);
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="bg-noise"></div>
 
     <!-- HEADER (Requested Style) -->
-    <div id="fixed-header" class="fixed top-0 left-0 w-full p-6 z-50 flex items-center justify-between pointer-events-none">
-        <div class="bg-white/90 backdrop-blur border border-gray-200 px-4 py-2 rounded-xl shadow-sm flex items-center gap-3 pointer-events-auto transition-transform duration-300">
-            <img src="foto/logo.png" alt="Logo UNU" class="h-11 w-auto">
-            <div class="border-l border-gray-300 pl-3">
-                <span class="font-heading font-bold text-lg tracking-tight text-[var(--unu-green)] block leading-none">UNU Blockchain</span>
-                <span class="text-[10px] font-mono block leading-none text-gray-500 mt-1 uppercase tracking-wider">Innovation Club</span>
-            </div>
+    <div
+      id="fixed-header"
+      class="fixed top-0 left-0 w-full p-2 md:p-6 z-50 flex items-center justify-between pointer-events-none"
+    >
+      <div
+        class="bg-white/90 backdrop-blur border border-gray-200 px-2 py-1 md:px-4 md:py-2 rounded-lg md:rounded-xl shadow-sm flex items-center gap-2 md:gap-3 pointer-events-auto transition-transform duration-300"
+      >
+        <img src="foto/logo.png" alt="Logo UNU" class="h-6 md:h-11 w-auto" />
+        <div class="border-l border-gray-300 pl-2 md:pl-3">
+          <span
+            class="font-heading font-bold text-xs md:text-lg tracking-tight text-[var(--unu-green)] block leading-none"
+            >UNU Blockchain</span
+          >
+          <span
+            class="text-[8px] md:text-[10px] font-mono block leading-none text-gray-500 mt-0.5 md:mt-1 uppercase tracking-wider"
+            >Innovation Club</span
+          >
         </div>
-        <div class="bg-white border border-gray-200 px-3 py-1 rounded-lg font-mono text-sm text-gray-500 shadow-sm pointer-events-auto">
-            <span id="slide-number" class="text-[var(--unu-green)] font-bold">01</span> / 28
-        </div>
+      </div>
+      <div
+        class="bg-white border border-gray-200 px-2 py-1 md:px-3 md:py-1 rounded-lg font-mono text-xs md:text-sm text-gray-500 shadow-sm pointer-events-auto"
+      >
+        <span id="slide-number" class="text-[var(--unu-green)] font-bold"
+          >01</span
+        >
+        / 28
+      </div>
     </div>
 
     <main id="slide-container">
+      <!-- Slide 1: Intro -->
+      <section class="active">
+        <div class="bg-indie"></div>
+        <div class="text-center max-w-4xl z-10">
+          <div class="reveal mb-6 inline-block">
+            <span
+              class="font-mono text-xs border border-[var(--unu-green)] text-[var(--unu-green)] px-3 py-1 rounded-full bg-white"
+              >MENTORING SESI #1</span
+            >
+          </div>
+          <h1
+            class="reveal text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-bold mb-4 md:mb-6 leading-none tracking-tighter text-black px-4"
+          >
+            SIAPA<br />PEMILIK<br /><span class="text-[var(--unu-green)]"
+              >INTERNET?</span
+            >
+          </h1>
+          <p
+            class="reveal text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mt-4 md:mt-6 max-w-2xl mx-auto font-light px-4"
+          >
+            Pertanyaan sederhana dengan jawaban yang menakutkan.
+          </p>
+          <button
+            onclick="nextSlide()"
+            class="reveal indie-btn mt-6 md:mt-10 text-sm md:text-lg flex items-center gap-2 mx-auto px-4 py-2 md:px-6 md:py-3"
+          >
+            Mulai Belajar
+            <svg class="icon icon-sm" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+          </button>
+        </div>
+      </section>
 
-        <!-- Slide 1: Intro -->
-        <section class="active">
-            <div class="bg-indie"></div>
-            <div class="text-center max-w-4xl z-10">
-                <div class="reveal mb-6 inline-block">
-                    <span class="font-mono text-xs border border-[var(--unu-green)] text-[var(--unu-green)] px-3 py-1 rounded-full bg-white">MENTORING SESI #1</span>
-                </div>
-                <h1 class="reveal text-7xl md:text-9xl font-bold mb-6 leading-none tracking-tighter text-black">
-                    SIAPA<br>PEMILIK<br><span class="text-[var(--unu-green)]">INTERNET?</span>
-                </h1>
-                <p class="reveal text-xl md:text-2xl text-gray-600 mt-6 max-w-2xl mx-auto font-light">
-                    Pertanyaan sederhana dengan jawaban yang menakutkan.
-                </p>
-                <button onclick="nextSlide()" class="reveal indie-btn mt-10 text-lg flex items-center gap-2 mx-auto">
-                    Mulai Belajar 
-                    <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
-                </button>
-            </div>
-        </section>
-
-        <!-- Slide 2: Aset Digital -->
-        <section>
-            <div class="bg-indie"></div>
-            <div class="max-w-6xl w-full grid md:grid-cols-2 gap-16 items-center z-10">
-                <div class="reveal">
-                    <h2 class="text-5xl font-bold mb-6">Harta Karun Digital</h2>
-                    <p class="text-xl leading-relaxed text-gray-600">
-                        Followers IG, Akun Game, Saldo E-Wallet... <br>
-                        Itu semua <span class="highlight">ASET BERHARGA</span>. Hasil keringat lu.
-                    </p>
-                </div>
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="reveal indie-card text-center group cursor-default">
-                        <svg class="icon icon-md mb-3 text-gray-400 group-hover:text-pink-500 transition mx-auto" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                        <p class="font-mono font-bold text-sm">Akun Sosmed</p>
-                    </div>
-                    <div class="reveal indie-card text-center group cursor-default">
-                        <svg class="icon icon-md mb-3 text-gray-400 group-hover:text-purple-500 transition mx-auto" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                        <p class="font-mono font-bold text-sm">Game Item</p>
-                    </div>
-                    <div class="reveal indie-card text-center group cursor-default">
-                        <svg class="icon icon-md mb-3 text-gray-400 group-hover:text-green-500 transition mx-auto" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
-                        <p class="font-mono font-bold text-sm">E-Wallet</p>
-                    </div>
-                    <div class="reveal indie-card text-center group cursor-default">
-                        <svg class="icon icon-md mb-3 text-gray-400 group-hover:text-blue-500 transition mx-auto" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-                        <p class="font-mono font-bold text-sm">Playlist</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 3: Masalah Web2 -->
-        <section class="bg-[#111] text-white">
-            <div class="max-w-4xl text-center z-10">
-                <div class="reveal mb-8 mx-auto w-24 h-24 border-2 border-white rounded-full flex items-center justify-center">
-                    <svg class="icon icon-lg text-white" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                </div>
-                <h2 class="reveal text-5xl font-bold mb-8 text-[var(--unu-gold)]">Masalahnya: <br>Lu Cuma Ngontrak</h2>
-                <p class="reveal text-2xl font-light leading-relaxed mb-12 opacity-80 text-gray-300">
-                    Di Web2 (Google, Meta, TikTok), kita itu kayak penyewa.
-                    Kita yang hias kamarnya, tapi kuncinya dipegang "Ibu Kos".
-                </p>
-                <div class="reveal bg-red-900/30 text-red-200 px-6 py-4 font-mono text-sm border border-red-500 rounded-lg inline-block">
-                    ⚠️ ALERT: Akun bisa di-banned kapan saja.
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 4: Centralization -->
-        <section>
-            <div class="bg-indie"></div>
-            <div class="max-w-5xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-4">Single Point of Failure</h2>
-                <p class="reveal text-xl mb-12 font-mono text-gray-500">// Semua data di satu keranjang //</p>
-                
-                <div class="reveal relative w-64 h-64 mx-auto bg-white border-2 border-black flex items-center justify-center shadow-[8px_8px_0px_0px_black] rounded-xl">
-                    <!-- Clean Server Rack SVG -->
-                    <svg class="icon icon-lg text-gray-800 w-32 h-32" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                    
-                    <div class="absolute -top-4 -right-8 bg-red-600 text-white px-3 py-1 font-mono text-xs border border-black rotate-12 shadow-md">SERVER PUSAT</div>
-                    <!-- Fire Icon SVG -->
-                    <div class="absolute bottom-[-20px] left-[-20px] bg-white border border-black rounded-full p-2">
-                        <svg class="w-10 h-10 text-red-500 fill-current" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.1.2-2.2.6-3.3.7 1.9 1.7 2.3 2.9 2.8z"/></svg>
-                    </div>
-                </div>
-                <p class="reveal mt-12 text-red-600 font-bold text-xl border-b-2 border-red-100 inline-block pb-1">
-                    Gedung Kebakaran = Data Satu Negara Hilang.
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 5: Timeline -->
-        <section class="bg-[var(--unu-green)] text-white">
-            <h2 class="reveal text-6xl font-bold mb-16 border-b-2 border-white/20 pb-4">EVOLUSI WEB</h2>
-            <div class="flex gap-8 md:gap-20 text-center items-end h-64 font-mono">
-                <div class="reveal group cursor-pointer opacity-50 hover:opacity-100 transition">
-                    <div class="h-24 w-px bg-white mx-auto mb-4 relative"><div class="absolute top-0 -left-1.5 w-3 h-3 bg-white rounded-full"></div></div>
-                    <h3 class="text-3xl font-bold">1990</h3>
-                    <p class="text-sm">Web 1.0</p>
-                </div>
-                <div class="reveal group cursor-pointer opacity-70 hover:opacity-100 transition">
-                    <div class="h-40 w-px bg-white mx-auto mb-4 relative"><div class="absolute top-0 -left-1.5 w-3 h-3 bg-white rounded-full"></div></div>
-                    <h3 class="text-3xl font-bold">2005</h3>
-                    <p class="text-sm">Web 2.0</p>
-                </div>
-                <div class="reveal group cursor-pointer text-[var(--unu-gold)]">
-                    <div class="h-56 w-1 bg-[var(--unu-gold)] mx-auto mb-4 relative"><div class="absolute top-0 -left-2 w-5 h-5 bg-[var(--unu-gold)] border border-black"></div></div>
-                    <h3 class="text-5xl font-bold">NOW</h3>
-                    <p class="text-sm font-bold">Web 3.0</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 6: Web 1 -->
-        <section>
-            <div class="bg-indie"></div>
-            <div class="max-w-4xl text-center z-10">
-                <div class="reveal font-mono text-xs mb-4 text-gray-500 border border-gray-300 px-2 py-1 rounded inline-block">ERA 1990 - 2004</div>
-                <h2 class="reveal text-6xl font-bold mb-8">Web 1.0: Mading Kampus</h2>
-                <div class="reveal indie-card inline-block p-10 bg-gray-50 max-w-lg">
-                    <svg class="icon icon-lg mb-4 text-gray-400 mx-auto" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                    <h3 class="text-4xl font-bold mb-2 bg-gray-200 inline-block px-3 font-mono text-gray-600">READ ONLY</h3>
-                    <p class="text-xl mt-6 text-gray-600">Cuma bisa BACA.<br>Gak bisa komen, gak bisa like, gak bisa login.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: Web 2 -->
-        <section class="bg-blue-50">
-            <div class="max-w-4xl text-center z-10">
-                <div class="reveal font-mono text-xs mb-4 text-blue-600 border border-blue-200 px-2 py-1 rounded inline-block bg-white">ERA 2005 - SEKARANG</div>
-                <h2 class="reveal text-6xl font-bold mb-8 text-blue-900">Web 2.0: Papan Tulis</h2>
-                <div class="reveal indie-card inline-block p-10 bg-white border-blue-500 shadow-[8px_8px_0px_0px_#3b82f6]">
-                    <svg class="icon icon-lg mb-4 text-blue-600 mx-auto" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    <h3 class="text-4xl font-bold mb-2 bg-blue-100 text-blue-900 inline-block px-3 font-mono">READ + WRITE</h3>
-                    <p class="text-xl mt-6 text-gray-700">Lu bisa nulis (Posting).<br>Tapi <span class="text-red-600 font-bold border-b-2 border-red-600">Penghapusnya</span> dipegang Admin.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Web 3 -->
-        <section class="bg-black text-white">
-            <div class="max-w-4xl text-center z-10">
-                <div class="reveal font-mono text-xs mb-4 text-[var(--unu-gold)] border border-white/20 px-2 py-1 rounded inline-block">MASA DEPAN</div>
-                <h2 class="reveal text-6xl font-bold mb-8">Web 3.0: Sertifikat Tanah</h2>
-                <div class="reveal border-2 border-white p-10 shadow-[8px_8px_0px_0px_var(--unu-gold)] bg-[#111] rounded-xl flex flex-col items-center max-w-lg mx-auto">
-                    <svg class="icon icon-lg mb-4 text-[var(--unu-gold)]" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    <h3 class="text-3xl font-bold mb-2 text-[var(--unu-gold)] font-mono">READ + WRITE + OWN</h3>
-                    <p class="text-xl mt-6 text-gray-300">Lu gak cuma nulis.<br>Lu <span class="text-[var(--unu-green)] font-bold">MEMILIKI</span> datanya secara sah.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 9: Comparison -->
-        <section>
-            <div class="bg-indie"></div>
-            <h2 class="reveal text-5xl font-bold mb-12">Perbandingan Cepat</h2>
-            <div class="reveal grid grid-cols-2 w-full max-w-5xl border border-gray-300 rounded-xl overflow-hidden shadow-xl bg-white">
-                <div class="p-10 border-r border-gray-200">
-                    <h3 class="font-bold text-2xl mb-6 text-gray-400 font-mono">WEB 2.0</h3>
-                    <ul class="space-y-6 text-lg font-medium text-gray-600">
-                        <li class="flex items-center gap-3"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> Login Email</li>
-                        <li class="flex items-center gap-3"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg> Data di Google</li>
-                        <li class="flex items-center gap-3"><svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Uang di Bank</li>
-                    </ul>
-                </div>
-                <div class="bg-[var(--unu-green)] text-white p-10">
-                    <h3 class="font-bold text-2xl mb-6 text-[var(--unu-gold)] font-mono">WEB 3.0</h3>
-                    <ul class="space-y-6 text-lg font-bold">
-                        <li class="flex items-center gap-3"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"></path><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path></svg> Login Wallet</li>
-                        <li class="flex items-center gap-3"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Data di Blockchain</li>
-                        <li class="flex items-center gap-3"><svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg> Uang Sendiri</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 10: Trust Question -->
-        <section class="bg-black text-white">
-            <h2 class="reveal text-4xl md:text-6xl font-bold text-center max-w-4xl leading-snug px-4">
-                "Gimana cara jagain data kalau <span class="text-[var(--unu-gold)] border-b-4 border-[var(--unu-gold)]">gak ada Bank?</span>"
+      <!-- Slide 2: Aset Digital -->
+      <section>
+        <div class="bg-indie"></div>
+        <div
+          class="max-w-6xl w-full grid md:grid-cols-2 gap-8 md:gap-16 items-center z-10 px-4"
+        >
+          <div class="reveal">
+            <h2
+              class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6"
+            >
+              Harta Karun Digital
             </h2>
-        </section>
+            <p
+              class="text-base sm:text-lg md:text-xl leading-relaxed text-gray-600"
+            >
+              Followers IG, Akun Game, Saldo E-Wallet... <br />
+              Itu semua <span class="highlight">ASET BERHARGA</span>. Hasil
+              keringat lu.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-3 md:gap-6">
+            <div class="reveal indie-card text-center group cursor-default">
+              <svg
+                class="icon icon-md mb-3 text-gray-400 group-hover:text-pink-500 transition mx-auto"
+                viewBox="0 0 24 24"
+              >
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path
+                  d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                ></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+              <p class="font-mono font-bold text-sm">Akun Sosmed</p>
+            </div>
+            <div class="reveal indie-card text-center group cursor-default">
+              <svg
+                class="icon icon-md mb-3 text-gray-400 group-hover:text-purple-500 transition mx-auto"
+                viewBox="0 0 24 24"
+              >
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <p class="font-mono font-bold text-sm">Game Item</p>
+            </div>
+            <div class="reveal indie-card text-center group cursor-default">
+              <svg
+                class="icon icon-md mb-3 text-gray-400 group-hover:text-green-500 transition mx-auto"
+                viewBox="0 0 24 24"
+              >
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+              <p class="font-mono font-bold text-sm">E-Wallet</p>
+            </div>
+            <div class="reveal indie-card text-center group cursor-default">
+              <svg
+                class="icon icon-md mb-3 text-gray-400 group-hover:text-blue-500 transition mx-auto"
+                viewBox="0 0 24 24"
+              >
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+              </svg>
+              <p class="font-mono font-bold text-sm">Playlist</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <!-- Slide 11: Ledger (Kas Kelas - Sentralisasi) -->
-        <section class="bg-red-50">
-            <div class="max-w-4xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-10">Cara Lama: Uang Kas Kelas</h2>
-                <div class="reveal flex items-center justify-center gap-8">
-                    <!-- SVG Guard -->
-                    <svg class="icon icon-lg text-gray-800" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    
-                    <div class="text-4xl">---></div>
-                    <div class="w-48 h-60 bg-white border-2 border-black flex items-center justify-center shadow-lg rounded-md relative">
-                        <span class="font-bold text-xl text-center font-mono">BUKU<br>BENDAHARA</span>
-                        <div class="absolute top-[-10px] right-[-10px] bg-red-600 text-white text-xs px-2 py-1 rounded">Private</div>
-                    </div>
+      <!-- Slide 3: Masalah Web2 -->
+      <section class="bg-[#111] text-white">
+        <div class="max-w-4xl text-center z-10">
+          <div
+            class="reveal mb-8 mx-auto w-24 h-24 border-2 border-white rounded-full flex items-center justify-center"
+          >
+            <svg class="icon icon-lg text-white" viewBox="0 0 24 24">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+          <h2 class="reveal text-5xl font-bold mb-8 text-[var(--unu-gold)]">
+            Masalahnya: <br />Lu Cuma Ngontrak
+          </h2>
+          <p
+            class="reveal text-2xl font-light leading-relaxed mb-12 opacity-80 text-gray-300"
+          >
+            Di Web2 (Google, Meta, TikTok), kita itu kayak penyewa. Kita yang
+            hias kamarnya, tapi kuncinya dipegang "Ibu Kos".
+          </p>
+          <div
+            class="reveal bg-red-900/30 text-red-200 px-6 py-4 font-mono text-sm border border-red-500 rounded-lg inline-block"
+          >
+            ⚠️ ALERT: Akun bisa di-banned kapan saja.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Centralization -->
+      <section>
+        <div class="bg-indie"></div>
+        <div class="max-w-5xl text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-4">
+            Single Point of Failure
+          </h2>
+          <p class="reveal text-xl mb-12 font-mono text-gray-500">
+            // Semua data di satu keranjang //
+          </p>
+
+          <div
+            class="reveal relative w-64 h-64 mx-auto bg-white border-2 border-black flex items-center justify-center shadow-[8px_8px_0px_0px_black] rounded-xl"
+          >
+            <!-- Clean Server Rack SVG -->
+            <svg
+              class="icon icon-lg text-gray-800 w-32 h-32"
+              viewBox="0 0 24 24"
+            >
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+
+            <div
+              class="absolute -top-4 -right-8 bg-red-600 text-white px-3 py-1 font-mono text-xs border border-black rotate-12 shadow-md"
+            >
+              SERVER PUSAT
+            </div>
+            <!-- Fire Icon SVG -->
+            <div
+              class="absolute bottom-[-20px] left-[-20px] bg-white border border-black rounded-full p-2"
+            >
+              <svg
+                class="w-10 h-10 text-red-500 fill-current"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.1.2-2.2.6-3.3.7 1.9 1.7 2.3 2.9 2.8z"
+                />
+              </svg>
+            </div>
+          </div>
+          <p
+            class="reveal mt-12 text-red-600 font-bold text-xl border-b-2 border-red-100 inline-block pb-1"
+          >
+            Gedung Kebakaran = Data Satu Negara Hilang.
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 5: Timeline -->
+      <section class="bg-[var(--unu-green)] text-white">
+        <h2
+          class="reveal text-6xl font-bold mb-16 border-b-2 border-white/20 pb-4"
+        >
+          EVOLUSI WEB
+        </h2>
+        <div
+          class="flex flex-col sm:flex-row gap-4 sm:gap-8 md:gap-20 text-center items-end min-h-64 font-mono px-4"
+        >
+          <div
+            class="reveal group cursor-pointer opacity-50 hover:opacity-100 transition"
+          >
+            <div class="h-16 sm:h-24 w-px bg-white mx-auto mb-4 relative">
+              <div
+                class="absolute top-0 -left-1.5 w-3 h-3 bg-white rounded-full"
+              ></div>
+            </div>
+            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold">1990</h3>
+            <p class="text-xs sm:text-sm">Web 1.0</p>
+          </div>
+          <div
+            class="reveal group cursor-pointer opacity-70 hover:opacity-100 transition"
+          >
+            <div
+              class="h-24 sm:h-32 md:h-40 w-px bg-white mx-auto mb-4 relative"
+            >
+              <div
+                class="absolute top-0 -left-1.5 w-3 h-3 bg-white rounded-full"
+              ></div>
+            </div>
+            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold">2005</h3>
+            <p class="text-xs sm:text-sm">Web 2.0</p>
+          </div>
+          <div class="reveal group cursor-pointer text-[var(--unu-gold)]">
+            <div
+              class="h-32 sm:h-40 md:h-56 w-1 bg-[var(--unu-gold)] mx-auto mb-4 relative"
+            >
+              <div
+                class="absolute top-0 -left-2 w-4 h-4 md:w-5 md:h-5 bg-[var(--unu-gold)] border border-black"
+              ></div>
+            </div>
+            <h3 class="text-2xl sm:text-3xl md:text-5xl font-bold">NOW</h3>
+            <p class="text-xs sm:text-sm font-bold">Web 3.0</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Web 1 -->
+      <section>
+        <div class="bg-indie"></div>
+        <div class="max-w-4xl text-center z-10">
+          <div
+            class="reveal font-mono text-xs mb-4 text-gray-500 border border-gray-300 px-2 py-1 rounded inline-block"
+          >
+            ERA 1990 - 2004
+          </div>
+          <h2 class="reveal text-6xl font-bold mb-8">Web 1.0: Mading Kampus</h2>
+          <div class="reveal indie-card inline-block p-10 bg-gray-50 max-w-lg">
+            <svg
+              class="icon icon-lg mb-4 text-gray-400 mx-auto"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path
+                d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+              ></path>
+            </svg>
+            <h3
+              class="text-4xl font-bold mb-2 bg-gray-200 inline-block px-3 font-mono text-gray-600"
+            >
+              READ ONLY
+            </h3>
+            <p class="text-xl mt-6 text-gray-600">
+              Cuma bisa BACA.<br />Gak bisa komen, gak bisa like, gak bisa
+              login.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Web 2 -->
+      <section class="bg-blue-50">
+        <div class="max-w-4xl text-center z-10">
+          <div
+            class="reveal font-mono text-xs mb-4 text-blue-600 border border-blue-200 px-2 py-1 rounded inline-block bg-white"
+          >
+            ERA 2005 - SEKARANG
+          </div>
+          <h2 class="reveal text-6xl font-bold mb-8 text-blue-900">
+            Web 2.0: Papan Tulis
+          </h2>
+          <div
+            class="reveal indie-card inline-block p-10 bg-white border-blue-500 shadow-[8px_8px_0px_0px_#3b82f6]"
+          >
+            <svg
+              class="icon icon-lg mb-4 text-blue-600 mx-auto"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+              ></path>
+              <path
+                d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+              ></path>
+            </svg>
+            <h3
+              class="text-4xl font-bold mb-2 bg-blue-100 text-blue-900 inline-block px-3 font-mono"
+            >
+              READ + WRITE
+            </h3>
+            <p class="text-xl mt-6 text-gray-700">
+              Lu bisa nulis (Posting).<br />Tapi
+              <span class="text-red-600 font-bold border-b-2 border-red-600"
+                >Penghapusnya</span
+              >
+              dipegang Admin.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Web 3 -->
+      <section class="bg-black text-white">
+        <div class="max-w-4xl text-center z-10">
+          <div
+            class="reveal font-mono text-xs mb-4 text-[var(--unu-gold)] border border-white/20 px-2 py-1 rounded inline-block"
+          >
+            MASA DEPAN
+          </div>
+          <h2 class="reveal text-6xl font-bold mb-8">
+            Web 3.0: Sertifikat Tanah
+          </h2>
+          <div
+            class="reveal border-2 border-white p-10 shadow-[8px_8px_0px_0px_var(--unu-gold)] bg-[#111] rounded-xl flex flex-col items-center max-w-lg mx-auto"
+          >
+            <svg
+              class="icon icon-lg mb-4 text-[var(--unu-gold)]"
+              viewBox="0 0 24 24"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <h3
+              class="text-3xl font-bold mb-2 text-[var(--unu-gold)] font-mono"
+            >
+              READ + WRITE + OWN
+            </h3>
+            <p class="text-xl mt-6 text-gray-300">
+              Lu gak cuma nulis.<br />Lu
+              <span class="text-[var(--unu-green)] font-bold">MEMILIKI</span>
+              datanya secara sah.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Comparison -->
+      <section>
+        <div class="bg-indie"></div>
+        <h2 class="reveal text-5xl font-bold mb-12">Perbandingan Cepat</h2>
+        <div
+          class="reveal grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl border border-gray-300 rounded-xl overflow-hidden shadow-xl bg-white"
+        >
+          <div
+            class="p-6 md:p-10 border-r-0 md:border-r border-gray-200 border-b md:border-b-0"
+          >
+            <h3
+              class="font-bold text-xl md:text-2xl mb-4 md:mb-6 text-gray-400 font-mono"
+            >
+              WEB 2.0
+            </h3>
+            <ul
+              class="space-y-4 md:space-y-6 text-base md:text-lg font-medium text-gray-600"
+            >
+              <li class="flex items-center gap-3">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  ></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                Login Email
+              </li>
+              <li class="flex items-center gap-3">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                  <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                  <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                  <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                </svg>
+                Data di Google
+              </li>
+              <li class="flex items-center gap-3">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path
+                    d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                  ></path>
+                </svg>
+                Uang di Bank
+              </li>
+            </ul>
+          </div>
+          <div class="bg-[var(--unu-green)] text-white p-6 md:p-10">
+            <h3
+              class="font-bold text-xl md:text-2xl mb-4 md:mb-6 text-[var(--unu-gold)] font-mono"
+            >
+              WEB 3.0
+            </h3>
+            <ul class="space-y-4 md:space-y-6 text-base md:text-lg font-bold">
+              <li class="flex items-center gap-3">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                  <path d="M4 6v12a2 2 0 0 0 2 2h14v-4"></path>
+                  <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                </svg>
+                Login Wallet
+              </li>
+              <li class="flex items-center gap-3">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path
+                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                  ></path>
+                </svg>
+                Data di Blockchain
+              </li>
+              <li class="flex items-center gap-3">
+                <svg class="icon icon-sm" viewBox="0 0 24 24">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                Uang Sendiri
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Trust Question -->
+      <section class="bg-black text-white">
+        <h2
+          class="reveal text-4xl md:text-6xl font-bold text-center max-w-4xl leading-snug px-4"
+        >
+          "Gimana cara jagain data kalau
+          <span
+            class="text-[var(--unu-gold)] border-b-4 border-[var(--unu-gold)]"
+            >gak ada Bank?</span
+          >"
+        </h2>
+      </section>
+
+      <!-- Slide 11: Ledger (Kas Kelas - Sentralisasi) -->
+      <section class="bg-red-50">
+        <div class="max-w-4xl text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-10">
+            Cara Lama: Uang Kas Kelas
+          </h2>
+          <div class="reveal flex items-center justify-center gap-8">
+            <!-- SVG Guard -->
+            <svg class="icon icon-lg text-gray-800" viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+
+            <div class="text-4xl">---></div>
+            <div
+              class="w-48 h-60 bg-white border-2 border-black flex items-center justify-center shadow-lg rounded-md relative"
+            >
+              <span class="font-bold text-xl text-center font-mono"
+                >BUKU<br />BENDAHARA</span
+              >
+              <div
+                class="absolute top-[-10px] right-[-10px] bg-red-600 text-white text-xs px-2 py-1 rounded"
+              >
+                Private
+              </div>
+            </div>
+          </div>
+          <p
+            class="reveal mt-10 font-bold text-red-600 text-xl border border-red-200 bg-white px-6 py-2 inline-block rounded-lg"
+          >
+            Satu Bendahara pegang buku. <br />Kalau dia korupsi, satu kelas
+            rugi.
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 12: Distributed Ledger (Kas Kelas Transparan - INTERACTIVE) -->
+      <section class="bg-[#f0fdf4]">
+        <div class="max-w-5xl text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-4 text-[var(--unu-green)]">
+            Cara Baru: Kas Tanpa Bendahara
+          </h2>
+          <p
+            class="reveal mb-10 font-mono text-sm border border-green-200 px-3 py-1 inline-block rounded-full bg-white text-green-700"
+          >
+            Distributed Ledger Technology
+          </p>
+
+          <div
+            class="reveal bg-white p-8 rounded-2xl border border-gray-200 shadow-xl max-w-4xl mx-auto mb-10 relative"
+          >
+            <!-- Controls -->
+            <div
+              class="flex gap-4 mb-8 justify-center items-end bg-gray-50 p-4 rounded-xl border border-gray-100"
+            >
+              <div class="text-left">
+                <label class="text-xs font-bold text-gray-500 block mb-1"
+                  >SIAPA BAYAR?</label
+                >
+                <select
+                  id="student-select"
+                  class="border border-gray-300 rounded px-3 py-2 font-mono text-sm focus:outline-none focus:border-[var(--unu-green)] w-32 bg-white"
+                >
+                  <option value="Budi">Budi</option>
+                  <option value="Siti">Siti</option>
+                  <option value="Edo">Edo</option>
+                </select>
+              </div>
+              <div class="text-left">
+                <label class="text-xs font-bold text-gray-500 block mb-1"
+                  >JUMLAH</label
+                >
+                <div
+                  class="border border-gray-300 rounded px-3 py-2 font-mono text-sm bg-gray-100 w-24"
+                >
+                  Rp 10.000
                 </div>
-                <p class="reveal mt-10 font-bold text-red-600 text-xl border border-red-200 bg-white px-6 py-2 inline-block rounded-lg">
-                    Satu Bendahara pegang buku. <br>Kalau dia korupsi, satu kelas rugi.
-                </p>
+              </div>
+              <button
+                id="btn-pay"
+                onclick="broadcastKas()"
+                class="indie-btn text-sm py-2 px-6 bg-[var(--unu-green)] text-white hover:bg-[#005a42]"
+              >
+                BAYAR KAS 💸
+              </button>
             </div>
-        </section>
 
-        <!-- Slide 12: Distributed Ledger (Kas Kelas Transparan - INTERACTIVE) -->
-        <section class="bg-[#f0fdf4]">
-            <div class="max-w-5xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-4 text-[var(--unu-green)]">Cara Baru: Kas Tanpa Bendahara</h2>
-                <p class="reveal mb-10 font-mono text-sm border border-green-200 px-3 py-1 inline-block rounded-full bg-white text-green-700">Distributed Ledger Technology</p>
-                
-                <div class="reveal bg-white p-8 rounded-2xl border border-gray-200 shadow-xl max-w-4xl mx-auto mb-10 relative">
-                    <!-- Controls -->
-                    <div class="flex gap-4 mb-8 justify-center items-end bg-gray-50 p-4 rounded-xl border border-gray-100">
-                        <div class="text-left">
-                            <label class="text-xs font-bold text-gray-500 block mb-1">SIAPA BAYAR?</label>
-                            <select id="student-select" class="border border-gray-300 rounded px-3 py-2 font-mono text-sm focus:outline-none focus:border-[var(--unu-green)] w-32 bg-white">
-                                <option value="Budi">Budi</option>
-                                <option value="Siti">Siti</option>
-                                <option value="Edo">Edo</option>
-                            </select>
-                        </div>
-                        <div class="text-left">
-                            <label class="text-xs font-bold text-gray-500 block mb-1">JUMLAH</label>
-                            <div class="border border-gray-300 rounded px-3 py-2 font-mono text-sm bg-gray-100 w-24">Rp 10.000</div>
-                        </div>
-                        <button id="btn-pay" onclick="broadcastKas()" class="indie-btn text-sm py-2 px-6 bg-[var(--unu-green)] text-white hover:bg-[#005a42]">
-                            BAYAR KAS 💸
-                        </button>
-                    </div>
-
-                    <!-- Students & Books -->
-                    <div class="grid grid-cols-3 gap-8 relative" id="students-grid">
-                        <div id="coin-container" class="absolute inset-0 pointer-events-none z-50"></div>
-                        <!-- Student 1 -->
-                        <div class="flex flex-col items-center group">
-                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border-2 border-blue-200 mb-2 transition">
-                                <svg class="icon icon-md text-blue-500" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            </div>
-                            <div id="book-a" class="w-full bg-gray-50 border-2 border-gray-300 p-2 h-40 overflow-y-auto text-xs font-mono rounded-lg transition shadow-inner relative"><div class="font-bold border-b border-gray-300 mb-2 pb-1 text-gray-400 text-center sticky top-0 bg-gray-50">BUKU ANDI</div><div class="space-y-1 content-area"></div></div>
-                        </div>
-                        <!-- Student 2 -->
-                        <div class="flex flex-col items-center group">
-                            <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center border-2 border-pink-200 mb-2 transition">
-                                <svg class="icon icon-md text-pink-500" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            </div>
-                            <div id="book-b" class="w-full bg-gray-50 border-2 border-gray-300 p-2 h-40 overflow-y-auto text-xs font-mono rounded-lg transition shadow-inner relative"><div class="font-bold border-b border-gray-300 mb-2 pb-1 text-gray-400 text-center sticky top-0 bg-gray-50">BUKU MAYA</div><div class="space-y-1 content-area"></div></div>
-                        </div>
-                        <!-- Student 3 -->
-                        <div class="flex flex-col items-center group">
-                            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center border-2 border-yellow-200 mb-2 transition">
-                                <svg class="icon icon-md text-yellow-500" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            </div>
-                            <div id="book-c" class="w-full bg-gray-50 border-2 border-gray-300 p-2 h-40 overflow-y-auto text-xs font-mono rounded-lg transition shadow-inner relative"><div class="font-bold border-b border-gray-300 mb-2 pb-1 text-gray-400 text-center sticky top-0 bg-gray-50">BUKU REZA</div><div class="space-y-1 content-area"></div></div>
-                        </div>
-                    </div>
+            <!-- Students & Books -->
+            <div
+              class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-8 relative"
+              id="students-grid"
+            >
+              <div
+                id="coin-container"
+                class="absolute inset-0 pointer-events-none z-50"
+              ></div>
+              <!-- Student 1 -->
+              <div class="flex flex-col items-center group">
+                <div
+                  class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center border-2 border-blue-200 mb-2 transition"
+                >
+                  <svg class="icon icon-md text-blue-500" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
                 </div>
-                <p class="reveal text-lg max-w-2xl mx-auto text-gray-600">
-                    Satu orang bayar, <strong>SEMUA ORANG</strong> otomatis mencatat. <br>
-                    Data ter-copy ke semua buku. Mustahil dimanipulasi bendahara.
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 13: Nodes -->
-        <section>
-            <div class="bg-indie"></div>
-            <div class="max-w-5xl text-center z-10">
-                <h2 class="reveal text-6xl font-bold mb-4">NODE</h2>
-                <p class="reveal text-xl mb-12 text-gray-500 font-mono">Saksi Mata Digital.</p>
-                <div class="reveal grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="indie-card flex flex-col items-center"><svg class="icon icon-md mb-2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg><p class="font-bold font-mono text-sm">Node Tokyo</p></div>
-                    <div class="indie-card flex flex-col items-center"><svg class="icon icon-md mb-2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg><p class="font-bold font-mono text-sm">Node NY</p></div>
-                    <div class="indie-card flex flex-col items-center"><svg class="icon icon-md mb-2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg><p class="font-bold font-mono text-sm">Node London</p></div>
-                    <div class="indie-card flex flex-col items-center bg-[var(--unu-green)] text-white border-black"><svg class="icon icon-md mb-2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg><p class="font-bold font-mono text-sm">Node Jogja</p></div>
+                <div
+                  id="book-a"
+                  class="w-full bg-gray-50 border-2 border-gray-300 p-2 min-h-32 md:h-40 overflow-y-auto text-xs font-mono rounded-lg transition shadow-inner relative"
+                >
+                  <div
+                    class="font-bold border-b border-gray-300 mb-2 pb-1 text-gray-400 text-center sticky top-0 bg-gray-50"
+                  >
+                    BUKU ANDI
+                  </div>
+                  <div class="space-y-1 content-area"></div>
                 </div>
-            </div>
-        </section>
-
-        <!-- Slide 14: Block -->
-        <section class="bg-blue-50">
-            <div class="max-w-4xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-8">Apa itu BLOCK?</h2>
-                <div class="reveal w-64 h-64 bg-white border border-gray-300 flex flex-col items-center justify-center shadow-lg rounded-2xl mx-auto">
-                    <svg class="icon icon-lg mb-4 text-blue-600" viewBox="0 0 24 24"><path d="M21 16.5A2.5 2.5 0 0 1 18.5 19 2.5 2.5 0 0 1 16 16.5"></path><path d="M12 21.03a2.5 2.5 0 0 1-2.4-2.45"></path><path d="M3 16.5A2.5 2.5 0 0 0 5.5 19 2.5 2.5 0 0 0 8 16.5"></path><polyline points="3.29 7 12 12.01 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line><path d="M21 16.5V7.5L12 3 3 7.5v9"></path></svg>
-                    <p class="text-2xl font-black font-mono text-gray-800">BLOCK #102</p>
-                    <div class="mt-3 bg-blue-100 px-3 py-1 text-xs font-mono text-blue-800 rounded-full">Isi: 500 Transaksi</div>
+              </div>
+              <!-- Student 2 -->
+              <div class="flex flex-col items-center group">
+                <div
+                  class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center border-2 border-pink-200 mb-2 transition"
+                >
+                  <svg class="icon icon-md text-pink-500" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
                 </div>
-                <p class="reveal mt-10 text-xl text-gray-600 max-w-2xl mx-auto">Transaksi dikumpulin jadi satu paket, terus dimasukin ke kotak (Block).</p>
-            </div>
-        </section>
-
-        <!-- Slide 15: Cryptography -->
-        <section class="bg-[#111] text-white">
-            <div class="max-w-4xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-2 text-[var(--unu-gold)]">SEGEL DIGITAL</h2>
-                <p class="reveal text-xl font-mono text-green-400 mb-10">&lt;Cryptography /&gt;</p>
-                <div class="reveal flex justify-center gap-12 mb-10">
-                    <svg class="icon icon-lg text-white" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                    <svg class="icon icon-lg text-white" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div
+                  id="book-b"
+                  class="w-full bg-gray-50 border-2 border-gray-300 p-2 min-h-32 md:h-40 overflow-y-auto text-xs font-mono rounded-lg transition shadow-inner relative"
+                >
+                  <div
+                    class="font-bold border-b border-gray-300 mb-2 pb-1 text-gray-400 text-center sticky top-0 bg-gray-50"
+                  >
+                    BUKU MAYA
+                  </div>
+                  <div class="space-y-1 content-area"></div>
                 </div>
-                <p class="reveal text-xl font-light text-gray-400 max-w-2xl mx-auto">Teknologi anti maling untuk memastikan isi kotak tidak berubah.</p>
-            </div>
-        </section>
-
-        <!-- Slide 16: Hashing (Interactive Digital Fingerprint) -->
-        <section class="bg-amber-50">
-            <div class="max-w-6xl w-full text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-4 text-amber-900">Mesin Sidik Jari (Hashing)</h2>
-                <p class="reveal mb-10 text-amber-700">Analogi: Setiap data punya "Sidik Jari" unik. Ubah 1 huruf = Sidik jari berubah total.</p>
-                
-                <div class="reveal bg-white p-8 border border-gray-200 shadow-xl rounded-xl max-w-3xl mx-auto flex flex-col md:flex-row gap-8 items-center">
-                    <div class="flex-1 w-full text-left">
-                        <label class="font-bold block mb-2 text-gray-500 text-sm">INPUT DATA (Ketik apapun):</label>
-                        <textarea id="hash-input" oninput="updateHash()" class="w-full h-32 border-2 border-gray-300 p-4 font-mono text-lg focus:outline-none focus:border-[var(--unu-gold)] rounded-lg transition" placeholder="Coba ketik nama lu..."></textarea>
-                    </div>
-                    
-                    <div class="flex flex-col items-center justify-center">
-                        <svg class="icon icon-md text-gray-300" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </div>
-
-                    <div class="flex-1 w-full flex flex-col items-center">
-                        <label class="font-bold block mb-4 text-gray-500 text-sm">DIGITAL FINGERPRINT:</label>
-                        <!-- Visual Hash Representation -->
-                        <div id="hash-visual" class="w-32 h-32 bg-gray-200 rounded-full border-4 border-gray-300 mb-4 transition-all duration-300 flex items-center justify-center shadow-inner">
-                            <svg id="hash-icon" class="w-16 h-16 text-gray-400 transition-all duration-300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>
-                        </div>
-                        <div id="hash-text" class="font-mono text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded">0x000000...</div>
-                    </div>
+              </div>
+              <!-- Student 3 -->
+              <div class="flex flex-col items-center group">
+                <div
+                  class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center border-2 border-yellow-200 mb-2 transition"
+                >
+                  <svg class="icon icon-md text-yellow-500" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
                 </div>
-                
-                <p class="reveal mt-8 font-bold text-lg font-mono text-amber-800 bg-amber-100 px-4 py-2 inline-block rounded border border-amber-200">
-                    💡 Coba ubah satu huruf aja. Warnanya berubah gak?
-                </p>
-            </div>
-        </section>
-
-        <!-- Slide 17: Chain -->
-        <section>
-            <div class="bg-indie"></div>
-            <div class="max-w-6xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-12 text-[var(--unu-green)]">Kenapa BLOCK-CHAIN?</h2>
-                <div class="reveal flex flex-col md:flex-row items-center justify-center gap-1 font-mono text-sm">
-                    <div class="w-32 h-32 border border-gray-300 bg-gray-50 flex items-center justify-center text-gray-400 rounded-lg">Block 1</div>
-                    <svg class="icon icon-md mx-2 text-gray-300 transform rotate-90 md:rotate-0" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                    <div class="w-32 h-32 border-2 border-[var(--unu-green)] bg-white flex items-center justify-center font-bold shadow-lg transform scale-110 z-10 rounded-lg text-[var(--unu-green)]">Block 2</div>
-                    <svg class="icon icon-md mx-2 text-gray-300 transform rotate-90 md:rotate-0" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                    <div class="w-32 h-32 border border-gray-300 bg-gray-50 flex items-center justify-center text-gray-400 rounded-lg">Block 3</div>
+                <div
+                  id="book-c"
+                  class="w-full bg-gray-50 border-2 border-gray-300 p-2 min-h-32 md:h-40 overflow-y-auto text-xs font-mono rounded-lg transition shadow-inner relative"
+                >
+                  <div
+                    class="font-bold border-b border-gray-300 mb-2 pb-1 text-gray-400 text-center sticky top-0 bg-gray-50"
+                  >
+                    BUKU REZA
+                  </div>
+                  <div class="space-y-1 content-area"></div>
                 </div>
-                <p class="reveal mt-12 text-xl max-w-2xl mx-auto text-gray-600">Saling nyambung. <strong>Bobol Block 2 = Harus bobol Block 1 dulu.</strong> Mustahil.</p>
+              </div>
             </div>
-        </section>
+          </div>
+          <p class="reveal text-lg max-w-2xl mx-auto text-gray-600">
+            Satu orang bayar, <strong>SEMUA ORANG</strong> otomatis mencatat.
+            <br />
+            Data ter-copy ke semua buku. Mustahil dimanipulasi bendahara.
+          </p>
+        </div>
+      </section>
 
-        <!-- Slide 18: Immutable -->
-        <section class="bg-[#0f172a] text-white">
-            <div class="max-w-4xl text-center z-10">
-                <h2 class="reveal text-6xl md:text-8xl font-black mb-4 tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-white">IMMUTABLE</h2>
-                <p class="reveal text-2xl text-[var(--unu-gold)] font-mono italic mb-12">// Kekal / Tidak Bisa Diubah //</p>
-                <div class="reveal p-6 border border-white/10 rounded-xl inline-block bg-white/5"><p class="text-xl text-gray-300">Gak bisa Ctrl+Z. Gak bisa Delete. Jujur 100%.</p></div>
+      <!-- Slide 13: Nodes -->
+      <section>
+        <div class="bg-indie"></div>
+        <div class="max-w-5xl text-center z-10">
+          <h2 class="reveal text-6xl font-bold mb-4">NODE</h2>
+          <p class="reveal text-xl mb-12 text-gray-500 font-mono">
+            Saksi Mata Digital.
+          </p>
+          <div class="reveal grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="indie-card flex flex-col items-center">
+              <svg class="icon icon-md mb-2" viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+              <p class="font-bold font-mono text-sm">Node Tokyo</p>
             </div>
-        </section>
-
-        <!-- Slide 19: Consensus -->
-        <section>
-            <div class="bg-indie"></div>
-            <div class="max-w-5xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-10">Consensus (Mufakat)</h2>
-                <div class="reveal grid grid-cols-2 gap-12 items-center mb-10">
-                    <div class="text-center p-8 bg-white border border-[var(--unu-green)] shadow-md rounded-xl">
-                        <!-- SVG Group -->
-                        <svg class="icon icon-lg text-[var(--unu-green)] mb-4 mx-auto" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        <p class="font-bold text-xl text-[var(--unu-green)] font-mono">99% Jujur</p>
-                    </div>
-                    <div class="text-center p-8 border border-dashed border-gray-300 opacity-50 rounded-xl">
-                        <!-- SVG Hacker -->
-                        <svg class="icon icon-lg text-gray-500 mb-4 mx-auto" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
-                        <p class="font-bold text-xl text-gray-500 font-mono">1% Hacker</p>
-                    </div>
-                </div>
-                <p class="reveal text-lg font-mono text-gray-600">Mayoritas Menang. Penipu Kalah.</p>
+            <div class="indie-card flex flex-col items-center">
+              <svg class="icon icon-md mb-2" viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+              </svg>
+              <p class="font-bold font-mono text-sm">Node NY</p>
             </div>
-        </section>
-
-        <!-- Slide 20: JANGAN KETUKER -->
-        <section class="bg-blue-50">
-            <div class="max-w-6xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-6 text-black">JANGAN KETUKER!</h2>
-                <p class="reveal text-xl mb-12 text-gray-600">Banyak yang salah paham. Ini bedanya:</p>
-                
-                <div class="reveal grid grid-cols-3 gap-8">
-                    <!-- Blockchain Card -->
-                    <div class="indie-card flex flex-col items-center group cursor-pointer hover:bg-black hover:text-white transition">
-                        <svg class="icon icon-lg mb-4 text-blue-600 group-hover:text-[var(--unu-gold)]" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                        <h3 class="text-2xl font-bold mb-2 font-mono">BLOCKCHAIN</h3>
-                        <p class="text-sm font-bold opacity-60 mb-4 border-b border-gray-300 pb-2 group-hover:border-gray-700">MESIN / OS</p>
-                        <p class="text-sm">Ini adalah <strong>Teknologinya</strong> (Database). Ibarat iOS/Android di HP lu.</p>
-                    </div>
-
-                    <!-- Crypto Card -->
-                    <div class="indie-card flex flex-col items-center group cursor-pointer hover:bg-black hover:text-white transition">
-                        <svg class="icon icon-lg mb-4 text-[var(--unu-gold)] group-hover:text-[var(--unu-gold)]" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="12" y1="2" x2="12" y2="6"></line></svg>
-                        <h3 class="text-2xl font-bold mb-2 font-mono">CRYPTO</h3>
-                        <p class="text-sm font-bold opacity-60 mb-4 border-b border-gray-300 pb-2 group-hover:border-gray-700">ASET / UANG</p>
-                        <p class="text-sm">Ini adalah <strong>Isinya</strong> (Uang Digital). Ibarat Pulsa/Kuota di dalam HP.</p>
-                    </div>
-
-                    <!-- Web3 Card -->
-                    <div class="indie-card flex flex-col items-center group cursor-pointer hover:bg-black hover:text-white transition">
-                        <svg class="icon icon-lg mb-4 text-[var(--unu-green)] group-hover:text-[var(--unu-gold)]" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                        <h3 class="text-2xl font-bold mb-2 font-mono">WEB 3.0</h3>
-                        <p class="text-sm font-bold opacity-60 mb-4 border-b border-gray-300 pb-2 group-hover:border-gray-700">EKOSISTEM</p>
-                        <p class="text-sm">Ini adalah <strong>Visi/Era</strong> Internet baru yang dibangun di atas Blockchain.</p>
-                    </div>
-                </div>
+            <div class="indie-card flex flex-col items-center">
+              <svg class="icon icon-md mb-2" viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+              <p class="font-bold font-mono text-sm">Node London</p>
             </div>
-        </section>
-
-        <!-- Slide 21: Smart Contract -->
-        <section>
-            <div class="bg-indie"></div>
-            <div class="max-w-4xl text-center z-10">
-                <h2 class="reveal text-6xl font-bold mb-8 text-[var(--unu-green)]">SMART CONTRACT</h2>
-                <p class="reveal text-3xl font-light leading-snug px-8 border-l-4 border-[var(--unu-gold)] text-left bg-white shadow-sm py-6">
-                    "Perjanjian digital yang berjalan otomatis kalau syaratnya terpenuhi."
-                </p>
+            <div
+              class="indie-card flex flex-col items-center bg-[var(--unu-green)] text-white border-black"
+            >
+              <svg class="icon icon-md mb-2" viewBox="0 0 24 24">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+              </svg>
+              <p class="font-bold font-mono text-sm">Node Jogja</p>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <!-- Slide 22: Vending Machine (Interactive) -->
-        <section class="bg-[var(--unu-green)] text-white">
-            <div class="max-w-5xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-12">Analogi: Vending Machine</h2>
-                <div class="reveal bg-white/10 p-8 rounded-2xl border border-white/20 backdrop-blur-sm max-w-lg mx-auto">
-                    <div class="flex justify-center mb-6">
-                        <div class="w-32 h-40 bg-gray-800 rounded-t-lg relative border-4 border-gray-600 flex items-end justify-center pb-2">
-                            <!-- SVG Can Drink -->
-                            <svg id="vending-item" class="w-12 h-16 text-white transform scale-0 transition-all duration-300" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2L6 22L18 22L18 2L6 2ZM8 4L16 4L16 6L8 6L8 4ZM8 8L16 8L16 20L8 20L8 8Z"/></svg>
-                            
-                            <div class="absolute bottom-0 w-full h-2 bg-black"></div>
-                            <!-- LED Status -->
-                            <div id="vending-led" class="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full shadow-[0_0_10px_red] transition-all"></div>
-                        </div>
-                    </div>
-                    <div id="vending-screen" class="bg-black text-[var(--unu-gold)] font-mono text-center py-2 mb-4 text-xs rounded border border-gray-600">INSERT COIN</div>
-                    <div class="flex gap-2 justify-center">
-                        <button onclick="insertCoin()" class="bg-white text-black font-bold py-2 px-4 rounded text-xs shadow hover:bg-gray-200 active:scale-95 transition">🪙 Masukkan Koin</button>
-                        <button onclick="getDrink()" class="bg-[var(--unu-gold)] text-black font-bold py-2 px-4 rounded text-xs shadow hover:bg-amber-400 active:scale-95 transition">👇 Ambil Minum</button>
-                    </div>
-                </div>
-                <div class="reveal mt-8 font-mono text-sm opacity-80">IF (uang == harga) THEN (keluarkan_barang)</div>
+      <!-- Slide 14: Block -->
+      <section class="bg-blue-50">
+        <div class="max-w-4xl text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-8">Apa itu BLOCK?</h2>
+          <div
+            class="reveal w-64 h-64 bg-white border border-gray-300 flex flex-col items-center justify-center shadow-lg rounded-2xl mx-auto"
+          >
+            <svg class="icon icon-lg mb-4 text-blue-600" viewBox="0 0 24 24">
+              <path
+                d="M21 16.5A2.5 2.5 0 0 1 18.5 19 2.5 2.5 0 0 1 16 16.5"
+              ></path>
+              <path d="M12 21.03a2.5 2.5 0 0 1-2.4-2.45"></path>
+              <path
+                d="M3 16.5A2.5 2.5 0 0 0 5.5 19 2.5 2.5 0 0 0 8 16.5"
+              ></path>
+              <polyline points="3.29 7 12 12.01 20.71 7"></polyline>
+              <line x1="12" y1="22" x2="12" y2="12"></line>
+              <path d="M21 16.5V7.5L12 3 3 7.5v9"></path>
+            </svg>
+            <p class="text-2xl font-black font-mono text-gray-800">
+              BLOCK #102
+            </p>
+            <div
+              class="mt-3 bg-blue-100 px-3 py-1 text-xs font-mono text-blue-800 rounded-full"
+            >
+              Isi: 500 Transaksi
             </div>
-        </section>
+          </div>
+          <p class="reveal mt-10 text-xl text-gray-600 max-w-2xl mx-auto">
+            Transaksi dikumpulin jadi satu paket, terus dimasukin ke kotak
+            (Block).
+          </p>
+        </div>
+      </section>
 
-        <!-- Slide 23: Use Cases -->
-        <section>
-            <div class="bg-indie"></div>
-            <div class="max-w-6xl w-full text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-12">Bisa Buat Apa Aja?</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="reveal indie-card text-left items-start">
-                        <svg class="icon icon-md mb-4 text-gray-800" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                        <h3 class="font-bold text-xl mb-2 font-mono">Voting</h3>
-                        <p class="text-sm text-gray-500">Pemilu anti curang. Suara gak bisa diubah panitia.</p>
-                    </div>
-                    <div class="reveal indie-card text-left items-start">
-                        <svg class="icon icon-md mb-4 text-gray-800" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-                        <h3 class="font-bold text-xl mb-2 font-mono">Ijazah</h3>
-                        <p class="text-sm text-gray-500">Anti ijazah palsu.</p>
-                    </div>
-                    <div class="reveal indie-card text-left items-start">
-                        <svg class="icon icon-md mb-4 text-gray-800" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="2.5"></circle><circle cx="17.5" cy="15.5" r="2.5"></circle><path d="M8 17V5l12-2v12"></path></svg>
-                        <h3 class="font-bold text-xl mb-2 font-mono">Royalti</h3>
-                        <p class="text-sm text-gray-500">Musisi langsung dapet duit.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <!-- Slide 15: Cryptography -->
+      <section class="bg-[#111] text-white">
+        <div class="max-w-4xl text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-2 text-[var(--unu-gold)]">
+            SEGEL DIGITAL
+          </h2>
+          <p class="reveal text-xl font-mono text-green-400 mb-10">
+            &lt;Cryptography /&gt;
+          </p>
+          <div class="reveal flex justify-center gap-12 mb-10">
+            <svg class="icon icon-lg text-white" viewBox="0 0 24 24">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <svg class="icon icon-lg text-white" viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <p class="reveal text-xl font-light text-gray-400 max-w-2xl mx-auto">
+            Teknologi anti maling untuk memastikan isi kotak tidak berubah.
+          </p>
+        </div>
+      </section>
 
-        <!-- Slide 24: Career -->
-        <section class="bg-[#111] text-white">
-            <div class="max-w-4xl text-center z-10">
-                <h2 class="reveal text-5xl font-bold mb-10">Peluang Karir 🚀</h2>
-                <div class="reveal flex items-end gap-4 h-48 border-b border-white/20 pb-2 mb-8 w-64 mx-auto">
-                    <div class="w-1/3 h-1/4 bg-gray-700 rounded-t"></div>
-                    <div class="w-1/3 h-1/2 bg-gray-500 rounded-t"></div>
-                    <div class="w-1/3 h-full bg-[var(--unu-gold)] rounded-t shadow-[0_0_20px_var(--unu-gold)] relative">
-                        <span class="absolute -top-8 w-full text-center font-bold text-[var(--unu-gold)]">400%</span>
-                    </div>
-                </div>
-                <p class="reveal text-xl text-center font-mono text-gray-400">Demand Developer naik. Supply talent masih dikit banget.</p>
-            </div>
-        </section>
+      <!-- Slide 16: Hashing (Interactive Digital Fingerprint) -->
+      <section class="bg-amber-50">
+        <div class="max-w-6xl w-full text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-4 text-amber-900">
+            Mesin Sidik Jari (Hashing)
+          </h2>
+          <p class="reveal mb-10 text-amber-700">
+            Analogi: Setiap data punya "Sidik Jari" unik. Ubah 1 huruf = Sidik
+            jari berubah total.
+          </p>
 
-        <!-- Slide 25: Hidden Jobs -->
-        <section class="bg-white">
-            <div class="bg-indie"></div>
-            <div class="max-w-6xl w-full text-center z-10">
-                <div class="reveal mb-6 inline-block bg-black text-white px-4 py-1 font-mono text-xs rounded">WEB3 BUKAN CUMA CODING</div>
-                <h2 class="reveal text-5xl font-bold mb-12 text-[var(--unu-green)]">Kerjaan Non-Teknis</h2>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="reveal indie-card text-left items-start hover:bg-gray-50">
-                        <svg class="icon icon-md mb-2 text-pink-500" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        <h3 class="font-bold text-lg leading-tight mb-1">Community Manager</h3>
-                        <p class="text-xs text-gray-500">Jaga Discord/Telegram.</p>
-                    </div>
-                    <div class="reveal indie-card text-left items-start hover:bg-gray-50">
-                        <svg class="icon icon-md mb-2 text-blue-500" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        <h3 class="font-bold text-lg leading-tight mb-1">Technical Writer</h3>
-                        <p class="text-xs text-gray-500">Nulis dokumentasi project.</p>
-                    </div>
-                    <div class="reveal indie-card text-left items-start hover:bg-gray-50">
-                        <svg class="icon icon-md mb-2 text-orange-500" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <h3 class="font-bold text-lg leading-tight mb-1">Alpha Hunter</h3>
-                        <p class="text-xs text-gray-500">Riset project baru.</p>
-                    </div>
-                    <div class="reveal indie-card text-left items-start hover:bg-gray-50">
-                        <svg class="icon icon-md mb-2 text-purple-500" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
-                        <h3 class="font-bold text-lg leading-tight mb-1">NFT Artist</h3>
-                        <p class="text-xs text-gray-500">Bikin ilustrasi NFT.</p>
-                    </div>
-                </div>
+          <div
+            class="reveal bg-white p-4 md:p-8 border border-gray-200 shadow-xl rounded-xl max-w-3xl mx-auto flex flex-col md:flex-row gap-4 md:gap-8 items-center px-4"
+          >
+            <div class="flex-1 w-full text-left">
+              <label
+                class="font-bold block mb-2 text-gray-500 text-xs md:text-sm"
+                >INPUT DATA (Ketik apapun):</label
+              >
+              <textarea
+                id="hash-input"
+                oninput="updateHash()"
+                class="w-full h-24 md:h-32 border-2 border-gray-300 p-3 md:p-4 font-mono text-sm md:text-lg focus:outline-none focus:border-[var(--unu-gold)] rounded-lg transition"
+                placeholder="Coba ketik nama lu..."
+              ></textarea>
             </div>
-        </section>
 
-        <!-- Slide 26: Visi UBIC -->
-        <section class="bg-white">
-            <div class="bg-indie"></div>
-            <div class="max-w-4xl text-center z-10">
-                <h2 class="reveal text-6xl font-bold mb-8 text-[var(--unu-green)]">VISI UBIC</h2>
-                <p class="reveal text-2xl text-center leading-relaxed mb-12 text-gray-800">
-                    Kita gak cuma belajar teori.<br>Kita bakal <strong>PRAKTEK</strong> bikin Smart Contract, bikin Token, dan bangun Startup Web3.
-                </p>
-                <div class="reveal inline-block px-8 py-4 bg-[var(--unu-green)] text-white font-bold font-mono text-lg rounded-full shadow-lg">FROM ZERO TO HERO 🌟</div>
+            <div class="flex flex-col items-center justify-center">
+              <svg class="icon icon-md text-gray-300" viewBox="0 0 24 24">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
             </div>
-        </section>
 
-        <!-- Slide 27: Join Us -->
-        <section class="bg-[var(--unu-green)]" data-last-slide="true">
-            <div class="bg-indie" style="opacity: 0.1"></div>
-            <div class="reveal flex flex-col items-center mb-10 z-10">
-                <img src="foto/logo.png" alt="Logo UNU" class="h-28 w-auto mb-6 drop-shadow-xl filter brightness-0 invert">
-                <h1 class="font-heading font-bold text-5xl text-white tracking-widest drop-shadow-md">UBIC</h1>
-                <p class="text-white/80 font-mono tracking-widest mt-2 uppercase text-sm">UNU Blockchain Innovation Club</p>
+            <div class="flex-1 w-full flex flex-col items-center">
+              <label
+                class="font-bold block mb-3 md:mb-4 text-gray-500 text-xs md:text-sm"
+                >DIGITAL FINGERPRINT:</label
+              >
+              <!-- Visual Hash Representation -->
+              <div
+                id="hash-visual"
+                class="w-24 h-24 md:w-32 md:h-32 bg-gray-200 rounded-full border-4 border-gray-300 mb-3 md:mb-4 transition-all duration-300 flex items-center justify-center shadow-inner"
+              >
+                <svg
+                  id="hash-icon"
+                  class="w-12 h-12 md:w-16 md:h-16 text-gray-400 transition-all duration-300"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"
+                  />
+                </svg>
+              </div>
+              <div
+                id="hash-text"
+                class="font-mono text-xs text-gray-500 bg-gray-100 px-2 md:px-3 py-1 rounded text-center"
+              >
+                0x000000...
+              </div>
             </div>
-            <div class="reveal bg-white p-8 rounded-2xl shadow-2xl text-center max-w-2xl w-full z-10">
-                <h2 class="text-3xl font-bold mb-6 text-black">GABUNG SEKARANG!</h2>
-                <div class="grid grid-cols-2 gap-6 mb-8">
-                    <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg hover:border-[var(--unu-green)] transition cursor-pointer group">
-                        <div class="bg-white p-2 border border-gray-300 mb-3 rounded">
-                            <img src="foto/wa.png" class="w-full aspect-square object-cover grayscale group-hover:grayscale-0 transition">
-                        </div>
-                        <p class="font-bold text-sm text-[var(--unu-green)] font-mono">WHATSAPP</p>
-                    </div>
-                    <div class="bg-gray-50 p-4 border border-gray-200 rounded-lg hover:border-pink-500 transition cursor-pointer group">
-                        <div class="bg-white p-2 border border-gray-300 mb-3 rounded">
-                            <img src="foto/ig.png" class="w-full aspect-square object-cover grayscale group-hover:grayscale-0 transition">
-                        </div>
-                        <p class="font-bold text-sm text-pink-600 font-mono">INSTAGRAM</p>
-                    </div>
-                </div>
-                <p class="font-bold text-gray-500 font-mono text-sm">Sampai jumpa di sesi coding! 👋</p>
-            </div>
-        </section>
+          </div>
 
+          <p
+            class="reveal mt-8 font-bold text-lg font-mono text-amber-800 bg-amber-100 px-4 py-2 inline-block rounded border border-amber-200"
+          >
+            💡 Coba ubah satu huruf aja. Warnanya berubah gak?
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 17: Chain -->
+      <section>
+        <div class="bg-indie"></div>
+        <div class="max-w-6xl text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-12 text-[var(--unu-green)]">
+            Kenapa BLOCK-CHAIN?
+          </h2>
+          <div
+            class="reveal flex flex-col md:flex-row items-center justify-center gap-2 md:gap-1 font-mono text-xs md:text-sm px-4"
+          >
+            <div
+              class="w-24 h-24 md:w-32 md:h-32 border border-gray-300 bg-gray-50 flex items-center justify-center text-gray-400 rounded-lg"
+            >
+              Block 1
+            </div>
+            <svg
+              class="icon icon-md mx-2 text-gray-300 transform rotate-90 md:rotate-0"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+              ></path>
+              <path
+                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+              ></path>
+            </svg>
+            <div
+              class="w-24 h-24 md:w-32 md:h-32 border-2 border-[var(--unu-green)] bg-white flex items-center justify-center font-bold shadow-lg transform scale-110 z-10 rounded-lg text-[var(--unu-green)]"
+            >
+              Block 2
+            </div>
+            <svg
+              class="icon icon-md mx-2 text-gray-300 transform rotate-90 md:rotate-0"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+              ></path>
+              <path
+                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+              ></path>
+            </svg>
+            <div
+              class="w-24 h-24 md:w-32 md:h-32 border border-gray-300 bg-gray-50 flex items-center justify-center text-gray-400 rounded-lg"
+            >
+              Block 3
+            </div>
+          </div>
+          <p class="reveal mt-12 text-xl max-w-2xl mx-auto text-gray-600">
+            Saling nyambung.
+            <strong>Bobol Block 2 = Harus bobol Block 1 dulu.</strong> Mustahil.
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 18: Immutable -->
+      <section class="bg-[#0f172a] text-white">
+        <div class="max-w-4xl text-center z-10">
+          <h2
+            class="reveal text-6xl md:text-8xl font-black mb-4 tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-white"
+          >
+            IMMUTABLE
+          </h2>
+          <p
+            class="reveal text-2xl text-[var(--unu-gold)] font-mono italic mb-12"
+          >
+            // Kekal / Tidak Bisa Diubah //
+          </p>
+          <div
+            class="reveal p-6 border border-white/10 rounded-xl inline-block bg-white/5"
+          >
+            <p class="text-xl text-gray-300">
+              Gak bisa Ctrl+Z. Gak bisa Delete. Jujur 100%.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 19: Consensus -->
+      <section>
+        <div class="bg-indie"></div>
+        <div class="max-w-5xl text-center z-10">
+          <h2 class="reveal text-3xl md:text-5xl font-bold mb-6 md:mb-10">
+            Consensus (Mufakat)
+          </h2>
+          <div
+            class="reveal grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center mb-6 md:mb-10 px-4"
+          >
+            <div
+              class="text-center p-4 md:p-8 bg-white border border-[var(--unu-green)] shadow-md rounded-xl"
+            >
+              <!-- SVG Group -->
+              <svg
+                class="icon icon-lg text-[var(--unu-green)] mb-3 md:mb-4 mx-auto"
+                viewBox="0 0 24 24"
+              >
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <p
+                class="font-bold text-lg md:text-xl text-[var(--unu-green)] font-mono"
+              >
+                99% Jujur
+              </p>
+            </div>
+            <div
+              class="text-center p-4 md:p-8 border border-dashed border-gray-300 opacity-50 rounded-xl"
+            >
+              <!-- SVG Hacker -->
+              <svg
+                class="icon icon-lg text-gray-500 mb-3 md:mb-4 mx-auto"
+                viewBox="0 0 24 24"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+              </svg>
+              <p class="font-bold text-lg md:text-xl text-gray-500 font-mono">
+                1% Hacker
+              </p>
+            </div>
+          </div>
+          <p class="reveal text-lg font-mono text-gray-600">
+            Mayoritas Menang. Penipu Kalah.
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 20: JANGAN KETUKER -->
+      <section class="bg-blue-50">
+        <div class="max-w-6xl text-center z-10">
+          <h2
+            class="reveal text-3xl md:text-5xl font-bold mb-4 md:mb-6 text-black"
+          >
+            JANGAN KETUKER!
+          </h2>
+          <p class="reveal text-base md:text-xl mb-6 md:mb-12 text-gray-600">
+            Banyak yang salah paham. Ini bedanya:
+          </p>
+
+          <div
+            class="reveal grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 px-4"
+          >
+            <!-- Blockchain Card -->
+            <div
+              class="indie-card flex flex-col items-center group cursor-pointer hover:bg-black hover:text-white transition"
+            >
+              <svg
+                class="icon icon-lg mb-3 md:mb-4 text-blue-600 group-hover:text-[var(--unu-gold)]"
+                viewBox="0 0 24 24"
+              >
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+              </svg>
+              <h3 class="text-lg md:text-2xl font-bold mb-2 font-mono">
+                BLOCKCHAIN
+              </h3>
+              <p
+                class="text-xs md:text-sm font-bold opacity-60 mb-3 md:mb-4 border-b border-gray-300 pb-2 group-hover:border-gray-700"
+              >
+                MESIN / OS
+              </p>
+              <p class="text-xs md:text-sm">
+                Ini adalah <strong>Teknologinya</strong> (Database). Ibarat
+                iOS/Android di HP lu.
+              </p>
+            </div>
+
+            <!-- Crypto Card -->
+            <div
+              class="indie-card flex flex-col items-center group cursor-pointer hover:bg-black hover:text-white transition"
+            >
+              <svg
+                class="icon icon-lg mb-3 md:mb-4 text-[var(--unu-gold)] group-hover:text-[var(--unu-gold)]"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                <line x1="12" y1="18" x2="12" y2="22"></line>
+                <line x1="12" y1="2" x2="12" y2="6"></line>
+              </svg>
+              <h3 class="text-lg md:text-2xl font-bold mb-2 font-mono">
+                CRYPTO
+              </h3>
+              <p
+                class="text-xs md:text-sm font-bold opacity-60 mb-3 md:mb-4 border-b border-gray-300 pb-2 group-hover:border-gray-700"
+              >
+                ASET / UANG
+              </p>
+              <p class="text-xs md:text-sm">
+                Ini adalah <strong>Isinya</strong> (Uang Digital). Ibarat
+                Pulsa/Kuota di dalam HP.
+              </p>
+            </div>
+
+            <!-- Web3 Card -->
+            <div
+              class="indie-card flex flex-col items-center group cursor-pointer hover:bg-black hover:text-white transition"
+            >
+              <svg
+                class="icon icon-lg mb-3 md:mb-4 text-[var(--unu-green)] group-hover:text-[var(--unu-gold)]"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path
+                  d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                ></path>
+              </svg>
+              <h3 class="text-lg md:text-2xl font-bold mb-2 font-mono">
+                WEB 3.0
+              </h3>
+              <p
+                class="text-xs md:text-sm font-bold opacity-60 mb-3 md:mb-4 border-b border-gray-300 pb-2 group-hover:border-gray-700"
+              >
+                EKOSISTEM
+              </p>
+              <p class="text-xs md:text-sm">
+                Ini adalah <strong>Visi/Era</strong> Internet baru yang dibangun
+                di atas Blockchain.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 21: Smart Contract -->
+      <section>
+        <div class="bg-indie"></div>
+        <div class="max-w-4xl text-center z-10">
+          <h2 class="reveal text-6xl font-bold mb-8 text-[var(--unu-green)]">
+            SMART CONTRACT
+          </h2>
+          <p
+            class="reveal text-3xl font-light leading-snug px-8 border-l-4 border-[var(--unu-gold)] text-left bg-white shadow-sm py-6"
+          >
+            "Perjanjian digital yang berjalan otomatis kalau syaratnya
+            terpenuhi."
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 22: Vending Machine (Interactive) -->
+      <section class="bg-[var(--unu-green)] text-white">
+        <div class="max-w-5xl text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-12">
+            Analogi: Vending Machine
+          </h2>
+          <div
+            class="reveal bg-white/10 p-8 rounded-2xl border border-white/20 backdrop-blur-sm max-w-lg mx-auto"
+          >
+            <div class="flex justify-center mb-6">
+              <div
+                class="w-32 h-40 bg-gray-800 rounded-t-lg relative border-4 border-gray-600 flex items-end justify-center pb-2"
+              >
+                <!-- SVG Can Drink -->
+                <svg
+                  id="vending-item"
+                  class="w-12 h-16 text-white transform scale-0 transition-all duration-300"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M6 2L6 22L18 22L18 2L6 2ZM8 4L16 4L16 6L8 6L8 4ZM8 8L16 8L16 20L8 20L8 8Z"
+                  />
+                </svg>
+
+                <div class="absolute bottom-0 w-full h-2 bg-black"></div>
+                <!-- LED Status -->
+                <div
+                  id="vending-led"
+                  class="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full shadow-[0_0_10px_red] transition-all"
+                ></div>
+              </div>
+            </div>
+            <div
+              id="vending-screen"
+              class="bg-black text-[var(--unu-gold)] font-mono text-center py-2 mb-4 text-xs rounded border border-gray-600"
+            >
+              INSERT COIN
+            </div>
+            <div class="flex gap-2 justify-center">
+              <button
+                onclick="insertCoin()"
+                class="bg-white text-black font-bold py-2 px-4 rounded text-xs shadow hover:bg-gray-200 active:scale-95 transition"
+              >
+                🪙 Masukkan Koin
+              </button>
+              <button
+                onclick="getDrink()"
+                class="bg-[var(--unu-gold)] text-black font-bold py-2 px-4 rounded text-xs shadow hover:bg-amber-400 active:scale-95 transition"
+              >
+                👇 Ambil Minum
+              </button>
+            </div>
+          </div>
+          <div class="reveal mt-8 font-mono text-sm opacity-80">
+            IF (uang == harga) THEN (keluarkan_barang)
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 23: Use Cases -->
+      <section>
+        <div class="bg-indie"></div>
+        <div class="max-w-6xl w-full text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-12">Bisa Buat Apa Aja?</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="reveal indie-card text-left items-start">
+              <svg class="icon icon-md mb-4 text-gray-800" viewBox="0 0 24 24">
+                <polyline points="9 11 12 14 22 4"></polyline>
+                <path
+                  d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                ></path>
+              </svg>
+              <h3 class="font-bold text-xl mb-2 font-mono">Voting</h3>
+              <p class="text-sm text-gray-500">
+                Pemilu anti curang. Suara gak bisa diubah panitia.
+              </p>
+            </div>
+            <div class="reveal indie-card text-left items-start">
+              <svg class="icon icon-md mb-4 text-gray-800" viewBox="0 0 24 24">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+              <h3 class="font-bold text-xl mb-2 font-mono">Ijazah</h3>
+              <p class="text-sm text-gray-500">Anti ijazah palsu.</p>
+            </div>
+            <div class="reveal indie-card text-left items-start">
+              <svg class="icon icon-md mb-4 text-gray-800" viewBox="0 0 24 24">
+                <circle cx="5.5" cy="17.5" r="2.5"></circle>
+                <circle cx="17.5" cy="15.5" r="2.5"></circle>
+                <path d="M8 17V5l12-2v12"></path>
+              </svg>
+              <h3 class="font-bold text-xl mb-2 font-mono">Royalti</h3>
+              <p class="text-sm text-gray-500">Musisi langsung dapet duit.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 24: Career -->
+      <section class="bg-[#111] text-white">
+        <div class="max-w-4xl text-center z-10">
+          <h2 class="reveal text-5xl font-bold mb-10">Peluang Karir 🚀</h2>
+          <div
+            class="reveal flex items-end gap-4 h-48 border-b border-white/20 pb-2 mb-8 w-64 mx-auto"
+          >
+            <div class="w-1/3 h-1/4 bg-gray-700 rounded-t"></div>
+            <div class="w-1/3 h-1/2 bg-gray-500 rounded-t"></div>
+            <div
+              class="w-1/3 h-full bg-[var(--unu-gold)] rounded-t shadow-[0_0_20px_var(--unu-gold)] relative"
+            >
+              <span
+                class="absolute -top-8 w-full text-center font-bold text-[var(--unu-gold)]"
+                >400%</span
+              >
+            </div>
+          </div>
+          <p class="reveal text-xl text-center font-mono text-gray-400">
+            Demand Developer naik. Supply talent masih dikit banget.
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 25: Hidden Jobs -->
+      <section class="bg-white">
+        <div class="bg-indie"></div>
+        <div class="max-w-6xl w-full text-center z-10">
+          <div
+            class="reveal mb-6 inline-block bg-black text-white px-4 py-1 font-mono text-xs rounded"
+          >
+            WEB3 BUKAN CUMA CODING
+          </div>
+          <h2 class="reveal text-5xl font-bold mb-12 text-[var(--unu-green)]">
+            Kerjaan Non-Teknis
+          </h2>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div
+              class="reveal indie-card text-left items-start hover:bg-gray-50"
+            >
+              <svg class="icon icon-md mb-2 text-pink-500" viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <h3 class="font-bold text-lg leading-tight mb-1">
+                Community Manager
+              </h3>
+              <p class="text-xs text-gray-500">Jaga Discord/Telegram.</p>
+            </div>
+            <div
+              class="reveal indie-card text-left items-start hover:bg-gray-50"
+            >
+              <svg class="icon icon-md mb-2 text-blue-500" viewBox="0 0 24 24">
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                ></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <h3 class="font-bold text-lg leading-tight mb-1">
+                Technical Writer
+              </h3>
+              <p class="text-xs text-gray-500">Nulis dokumentasi project.</p>
+            </div>
+            <div
+              class="reveal indie-card text-left items-start hover:bg-gray-50"
+            >
+              <svg
+                class="icon icon-md mb-2 text-orange-500"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <h3 class="font-bold text-lg leading-tight mb-1">Alpha Hunter</h3>
+              <p class="text-xs text-gray-500">Riset project baru.</p>
+            </div>
+            <div
+              class="reveal indie-card text-left items-start hover:bg-gray-50"
+            >
+              <svg
+                class="icon icon-md mb-2 text-purple-500"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                <path d="M2 2l7.586 7.586"></path>
+                <circle cx="11" cy="11" r="2"></circle>
+              </svg>
+              <h3 class="font-bold text-lg leading-tight mb-1">NFT Artist</h3>
+              <p class="text-xs text-gray-500">Bikin ilustrasi NFT.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 26: Visi UBIC -->
+      <section class="bg-white">
+        <div class="bg-indie"></div>
+        <div class="max-w-4xl text-center z-10">
+          <h2 class="reveal text-6xl font-bold mb-8 text-[var(--unu-green)]">
+            VISI UBIC
+          </h2>
+          <p
+            class="reveal text-2xl text-center leading-relaxed mb-12 text-gray-800"
+          >
+            Kita gak cuma belajar teori.<br />Kita bakal
+            <strong>PRAKTEK</strong> bikin Smart Contract, bikin Token, dan
+            bangun Startup Web3.
+          </p>
+          <div
+            class="reveal inline-block px-8 py-4 bg-[var(--unu-green)] text-white font-bold font-mono text-lg rounded-full shadow-lg"
+          >
+            FROM ZERO TO HERO 🌟
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 27: Join Us -->
+      <section class="bg-[var(--unu-green)]" data-last-slide="true">
+        <div class="bg-indie" style="opacity: 0.1"></div>
+        <div class="reveal flex flex-col items-center mb-10 z-10">
+          <img
+            src="foto/logo.png"
+            alt="Logo UNU"
+            class="h-28 w-auto mb-6 drop-shadow-xl filter brightness-0 invert"
+          />
+          <h1
+            class="font-heading font-bold text-5xl text-white tracking-widest drop-shadow-md"
+          >
+            UBIC
+          </h1>
+          <p
+            class="text-white/80 font-mono tracking-widest mt-2 uppercase text-sm"
+          >
+            UNU Blockchain Innovation Club
+          </p>
+        </div>
+        <div
+          class="reveal bg-white p-4 md:p-8 rounded-2xl shadow-2xl text-center max-w-2xl w-full z-10 mx-4"
+        >
+          <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-black">
+            GABUNG SEKARANG!
+          </h2>
+          <div class="grid grid-cols-2 gap-3 md:gap-6 mb-6 md:mb-8">
+            <div
+              class="bg-gray-50 p-4 border border-gray-200 rounded-lg hover:border-[var(--unu-green)] transition cursor-pointer group"
+            >
+              <div class="bg-white p-2 border border-gray-300 mb-3 rounded">
+                <img
+                  src="foto/wa.png"
+                  class="w-full aspect-square object-cover grayscale group-hover:grayscale-0 transition"
+                />
+              </div>
+              <p class="font-bold text-sm text-[var(--unu-green)] font-mono">
+                WHATSAPP
+              </p>
+            </div>
+            <div
+              class="bg-gray-50 p-4 border border-gray-200 rounded-lg hover:border-pink-500 transition cursor-pointer group"
+            >
+              <div class="bg-white p-2 border border-gray-300 mb-3 rounded">
+                <img
+                  src="foto/ig.png"
+                  class="w-full aspect-square object-cover grayscale group-hover:grayscale-0 transition"
+                />
+              </div>
+              <p class="font-bold text-sm text-pink-600 font-mono">INSTAGRAM</p>
+            </div>
+          </div>
+          <p class="font-bold text-gray-500 font-mono text-sm">
+            Sampai jumpa di sesi coding! 👋
+          </p>
+        </div>
+      </section>
     </main>
 
     <script>
-        const container = document.getElementById('slide-container');
-        const slideNumber = document.getElementById('slide-number');
-        const header = document.getElementById('fixed-header');
-        const sections = document.querySelectorAll('section');
+      const container = document.getElementById("slide-container");
+      const slideNumber = document.getElementById("slide-number");
+      const header = document.getElementById("fixed-header");
+      const sections = document.querySelectorAll("section");
 
-        checkVisibility();
+      checkVisibility();
 
-        container.addEventListener('scroll', () => {
-            const index = Math.round(container.scrollTop / window.innerHeight);
-            slideNumber.innerText = (index + 1).toString().padStart(2, '0');
-            if (index === sections.length - 1) { header.style.transform = 'translateY(-100%)'; } 
-            else { header.style.transform = 'translateY(0)'; }
-            checkVisibility();
-        });
-
-        function checkVisibility() {
-            sections.forEach((section) => {
-                const rect = section.getBoundingClientRect();
-                if(rect.top >= -200 && rect.top <= window.innerHeight / 2) { section.classList.add('active'); } 
-            });
+      container.addEventListener("scroll", () => {
+        const index = Math.round(container.scrollTop / window.innerHeight);
+        slideNumber.innerText = (index + 1).toString().padStart(2, "0");
+        if (index === sections.length - 1) {
+          header.style.transform = "translateY(-100%)";
+        } else {
+          header.style.transform = "translateY(0)";
         }
+        checkVisibility();
+      });
 
-        function nextSlide() { container.scrollBy({ top: window.innerHeight, behavior: 'smooth' }); }
-        document.addEventListener('keydown', (e) => {
-            if(e.key === 'ArrowDown' || e.key === 'ArrowRight') nextSlide();
-            if(e.key === 'ArrowUp' || e.key === 'ArrowLeft') container.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+      function checkVisibility() {
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top >= -200 && rect.top <= window.innerHeight / 2) {
+            section.classList.add("active");
+          }
         });
+      }
 
-        // --- NEW: KAS KELAS LOGIC ---
-        function broadcastKas() {
-            const student = document.getElementById('student-select').value;
-            const amount = "10.000";
-            const btn = document.getElementById('btn-pay');
-            
-            // Animation Trigger
-            btn.innerHTML = "Mengirim... ✈️";
-            
-            // Create flying coins
-            createFlyingCoin('book-a');
-            setTimeout(() => createFlyingCoin('book-b'), 100);
-            setTimeout(() => createFlyingCoin('book-c'), 200);
+      function nextSlide() {
+        container.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") nextSlide();
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft")
+          container.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+      });
 
-            const html = `<div class="border-b border-gray-100 py-1 font-mono text-[10px] text-gray-600 flex justify-between">
+      // --- NEW: KAS KELAS LOGIC ---
+      function broadcastKas() {
+        const student = document.getElementById("student-select").value;
+        const amount = "10.000";
+        const btn = document.getElementById("btn-pay");
+
+        // Animation Trigger
+        btn.innerHTML = "Mengirim... ✈️";
+
+        // Create flying coins
+        createFlyingCoin("book-a");
+        setTimeout(() => createFlyingCoin("book-b"), 100);
+        setTimeout(() => createFlyingCoin("book-c"), 200);
+
+        const html = `<div class="border-b border-gray-100 py-1 font-mono text-[10px] text-gray-600 flex justify-between">
                             <span>${student}</span><span class="text-green-600">+${amount}</span>
                           </div>`;
-            
-            // Update Books after delay
-            setTimeout(() => {
-                ['book-a', 'book-b', 'book-c'].forEach(id => {
-                    const el = document.querySelector(`#${id} .content-area`);
-                    el.innerHTML += html; 
-                    el.parentElement.scrollTop = el.parentElement.scrollHeight;
-                    el.parentElement.classList.add('node-active');
-                    setTimeout(() => el.parentElement.classList.remove('node-active'), 300);
-                });
-                btn.innerHTML = "BAYAR KAS 💸";
-            }, 800);
+
+        // Update Books after delay
+        setTimeout(() => {
+          ["book-a", "book-b", "book-c"].forEach((id) => {
+            const el = document.querySelector(`#${id} .content-area`);
+            el.innerHTML += html;
+            el.parentElement.scrollTop = el.parentElement.scrollHeight;
+            el.parentElement.classList.add("node-active");
+            setTimeout(
+              () => el.parentElement.classList.remove("node-active"),
+              300
+            );
+          });
+          btn.innerHTML = "BAYAR KAS 💸";
+        }, 800);
+      }
+
+      function createFlyingCoin(targetId) {
+        const container = document.getElementById("coin-container");
+        const btn = document.getElementById("btn-pay");
+        const target = document.getElementById(targetId);
+
+        const startRect = btn.getBoundingClientRect();
+        const endRect = target.getBoundingClientRect();
+        const containerRect = document
+          .getElementById("students-grid")
+          .getBoundingClientRect();
+
+        // SVG Coin Icon
+        const coin = document.createElement("div");
+        coin.innerHTML =
+          '<svg class="w-6 h-6 text-yellow-500 fill-current" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="12" y1="2" x2="12" y2="6"></line></svg>';
+        coin.className = "flying-coin";
+        coin.style.left =
+          startRect.left - containerRect.left + startRect.width / 2 + "px";
+        coin.style.top = startRect.top - containerRect.top + "px";
+
+        const tx = endRect.left - startRect.left + "px";
+        const ty = endRect.top - startRect.top + "px";
+
+        coin.style.setProperty("--tx", tx);
+        coin.style.setProperty("--ty", ty);
+        coin.style.animation =
+          "flyToBook 0.8s forwards cubic-bezier(0.16, 1, 0.3, 1)";
+
+        container.appendChild(coin);
+        setTimeout(() => coin.remove(), 800);
+      }
+
+      // --- NEW: HASHING (FINGERPRINT) ---
+      function updateHash() {
+        const input = document.getElementById("hash-input").value;
+        const visual = document.getElementById("hash-visual");
+        const icon = document.getElementById("hash-icon");
+        const text = document.getElementById("hash-text");
+
+        if (!input) {
+          visual.style.backgroundColor = "#e5e7eb";
+          visual.style.borderRadius = "50%";
+          text.innerText = "0x000000...";
+          return;
         }
 
-        function createFlyingCoin(targetId) {
-            const container = document.getElementById('coin-container');
-            const btn = document.getElementById('btn-pay');
-            const target = document.getElementById(targetId);
-            
-            const startRect = btn.getBoundingClientRect();
-            const endRect = target.getBoundingClientRect();
-            const containerRect = document.getElementById('students-grid').getBoundingClientRect();
-
-            // SVG Coin Icon
-            const coin = document.createElement('div');
-            coin.innerHTML = '<svg class="w-6 h-6 text-yellow-500 fill-current" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="12" y1="2" x2="12" y2="6"></line></svg>';
-            coin.className = 'flying-coin';
-            coin.style.left = (startRect.left - containerRect.left + startRect.width/2) + 'px';
-            coin.style.top = (startRect.top - containerRect.top) + 'px';
-            
-            const tx = (endRect.left - startRect.left) + 'px';
-            const ty = (endRect.top - startRect.top) + 'px';
-            
-            coin.style.setProperty('--tx', tx);
-            coin.style.setProperty('--ty', ty);
-            coin.style.animation = 'flyToBook 0.8s forwards cubic-bezier(0.16, 1, 0.3, 1)';
-            
-            container.appendChild(coin);
-            setTimeout(() => coin.remove(), 800);
+        // Simple "Hash" Function simulation
+        let hash = 0;
+        for (let i = 0; i < input.length; i++) {
+          hash = input.charCodeAt(i) + ((hash << 5) - hash);
         }
+        const c = (hash & 0x00ffffff).toString(16).toUpperCase();
+        const color = "#" + "00000".substring(0, 6 - c.length) + c;
 
-        // --- NEW: HASHING (FINGERPRINT) ---
-        function updateHash() {
-            const input = document.getElementById('hash-input').value;
-            const visual = document.getElementById('hash-visual');
-            const icon = document.getElementById('hash-icon');
-            const text = document.getElementById('hash-text');
-            
-            if(!input) { 
-                visual.style.backgroundColor = '#e5e7eb';
-                visual.style.borderRadius = '50%';
-                text.innerText = '0x000000...';
-                return; 
-            }
+        // Apply visual changes (Avalanche Effect)
+        visual.style.backgroundColor = color;
+        visual.style.transform = `rotate(${hash % 360}deg) scale(${
+          1 + (hash % 10) / 20
+        })`;
+        visual.style.borderRadius = `${Math.abs(hash % 50)}%`; // Change shape
 
-            // Simple "Hash" Function simulation
-            let hash = 0;
-            for (let i = 0; i < input.length; i++) {
-                hash = input.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
-            const color = '#' + "00000".substring(0, 6 - c.length) + c;
-            
-            // Apply visual changes (Avalanche Effect)
-            visual.style.backgroundColor = color;
-            visual.style.transform = `rotate(${hash % 360}deg) scale(${1 + (hash % 10)/20})`;
-            visual.style.borderRadius = `${Math.abs(hash % 50)}%`; // Change shape
-            
-            text.innerText = 'HASH: ' + Math.abs(hash).toString(16);
-        }
+        text.innerText = "HASH: " + Math.abs(hash).toString(16);
+      }
 
-        // --- VENDING LOGIC ---
-        let hasCoin = false;
-        function insertCoin() { 
-            hasCoin = true; 
-            document.getElementById('vending-screen').innerText = "CREDIT: 1";
-            document.getElementById('vending-screen').classList.add('text-green-400');
-            document.getElementById('vending-led').classList.replace('bg-red-500', 'bg-green-500');
-            document.getElementById('vending-led').style.boxShadow = '0 0 10px #4ade80';
+      // --- VENDING LOGIC ---
+      let hasCoin = false;
+      function insertCoin() {
+        hasCoin = true;
+        document.getElementById("vending-screen").innerText = "CREDIT: 1";
+        document
+          .getElementById("vending-screen")
+          .classList.add("text-green-400");
+        document
+          .getElementById("vending-led")
+          .classList.replace("bg-red-500", "bg-green-500");
+        document.getElementById("vending-led").style.boxShadow =
+          "0 0 10px #4ade80";
+      }
+      function getDrink() {
+        if (hasCoin) {
+          const item = document.getElementById("vending-item");
+          item.style.transform = "scale(1)";
+          item.classList.add("drop-anim");
+          hasCoin = false;
+          setTimeout(() => {
+            document.getElementById("vending-screen").innerText = "INSERT COIN";
+            document
+              .getElementById("vending-screen")
+              .classList.remove("text-green-400");
+            document
+              .getElementById("vending-led")
+              .classList.replace("bg-green-500", "bg-red-500");
+            document.getElementById("vending-led").style.boxShadow =
+              "0 0 10px red";
+            setTimeout(() => item.classList.remove("drop-anim"), 100);
+          }, 2000);
+        } else {
+          const screen = document.getElementById("vending-screen");
+          const originalText = screen.innerText;
+          screen.innerText = "NO COIN!";
+          screen.style.color = "red";
+          setTimeout(() => {
+            screen.innerText = originalText;
+            screen.style.color = "var(--unu-gold)";
+          }, 500);
         }
-        function getDrink() {
-            if(hasCoin) {
-                const item = document.getElementById('vending-item');
-                item.style.transform = 'scale(1)';
-                item.classList.add('drop-anim');
-                hasCoin = false;
-                setTimeout(()=> {
-                    document.getElementById('vending-screen').innerText="INSERT COIN";
-                    document.getElementById('vending-screen').classList.remove('text-green-400');
-                    document.getElementById('vending-led').classList.replace('bg-green-500', 'bg-red-500');
-                    document.getElementById('vending-led').style.boxShadow = '0 0 10px red';
-                    setTimeout(() => item.classList.remove('drop-anim'), 100);
-                }, 2000);
-            } else {
-                const screen = document.getElementById('vending-screen');
-                const originalText = screen.innerText;
-                screen.innerText = "NO COIN!";
-                screen.style.color = "red";
-                setTimeout(() => {
-                    screen.innerText = originalText;
-                    screen.style.color = "var(--unu-gold)";
-                }, 500);
-            }
-        }
+      }
     </script>
-</body>
+  </body>
 </html>
